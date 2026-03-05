@@ -199,11 +199,6 @@ code::before{
   display: block;
 }
 
-/* 줄 번호 생성 */
-.highlight pre code span {
-  display: block;
-  counter-increment: line;
-}
 
 /* line number 표시 */
 .highlight pre code span::before {
