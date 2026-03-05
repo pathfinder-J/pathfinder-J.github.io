@@ -104,29 +104,15 @@ mjx-container[display="true"]{
   margin: 18px 0 !important;
 }
 
-/* ===== Rouge highlight theme (minimal) ===== */
-.highlight { background: #f6f8fa; border-radius: 12px; padding: 16px; overflow-x: auto; }
-.highlight pre { margin: 0; padding: 0; background: transparent; }
-.highlight code { background: transparent; padding: 0; }
+/* ===== Rouge highlight theme + language label (FINAL) ===== */
 
-.highlight .c { color: #6a737d; } /* Comment */
-.highlight .k { color: #d73a49; } /* Keyword */
-.highlight .o { color: #d73a49; } /* Operator */
-.highlight .s { color: #032f62; } /* String */
-.highlight .mi { color: #005cc5; } /* Number */
-.highlight .nf { color: #6f42c1; } /* Function name */
-.highlight .nb { color: #005cc5; } /* Builtins */
-.highlight .n  { color: #24292e; } /* Name */
-
-/* ===== Rouge highlight theme (minimal) ===== */
 .highlight{
   position: relative;
-
   background: #f6f8fa;
   border-radius: 12px;
 
-  /* 기존 highlight padding 16px 와 아래 18/16/14/16 중복 -> 하나로 통일 */
-  padding: 18px 16px 14px 16px;
+  /* 라벨이 코드와 겹치지 않게 위쪽 공간 확보 */
+  padding: 36px 16px 14px 16px;
 
   overflow-x: auto;
 }
@@ -152,15 +138,11 @@ mjx-container[display="true"]{
 .highlight .nb { color: #005cc5; } /* Builtins */
 .highlight .n  { color: #24292e; } /* Name */
 
-
-/* ===== Language label (Rouge/Jekyll 구조에 맞춤) =====
-   핵심: label 박스는 .highlight::before 하나로 띄우고,
-         content도 같은 .highlight::before에 설정해야 함.
-*/
+/* label box */
 .highlight::before{
   position: absolute;
-  top: 6px;
-  left: 10px;
+  top: 8px;
+  left: 12px;
 
   font-size: 12px;
   font-weight: 600;
@@ -173,66 +155,11 @@ mjx-container[display="true"]{
   padding: 2px 8px;
   line-height: 1.4;
 
-  /* 기본값(언어 못 찾을 때는 안 보이게) */
-  content: "";
   display: none;
+  content: "";
 }
 
-/* Rouge가 보통 code에 language-xxx 클래스를 붙임 -> 그걸 기준으로 label 표시 */
-.highlight:has(code.language-python)::before{
-  content: "python";
-  display: inline-block;
-}
-
-.highlight:has(code.language-javascript)::before{
-  content: "javascript";
-  display: inline-block;
-}
-
-.highlight:has(code.language-bash)::before{
-  content: "bash";
-  display: inline-block;
-}
-
-/* code block label */
-
-.highlight{
-  position:relative;
-  padding:18px 16px 14px 16px;
-}
-
-.highlight::before{
-  position:absolute;
-  top:6px;
-  left:10px;
-
-  font-size:12px;
-  font-weight:600;
-  color:#6b7280;
-
-  background:#f3f4f6;
-  border:1px solid #e5e7eb;
-  border-radius:6px;
-
-  padding:2px 8px;
-  line-height:1.4;
-
-  display:none;
-}
-
-/* language labels */
-
-.language-python .highlight::before{
-  content:"python";
-  display:inline-block;
-}
-
-.language-javascript .highlight::before{
-  content:"javascript";
-  display:inline-block;
-}
-
-.language-bash .highlight::before{
-  content:"bash";
-  display:inline-block;
-}
+/* language labels (GitHub Pages/Rouge에서 가장 흔한 wrapper 기준) */
+.language-python .highlight::before{ content:"python"; display:inline-block; }
+.language-javascript .highlight::before{ content:"javascript"; display:inline-block; }
+.language-bash .highlight::before{ content:"bash"; display:inline-block; }
