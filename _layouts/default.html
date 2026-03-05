@@ -16,6 +16,23 @@
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
+<script>
+  document.querySelectorAll('pre > code[class^="language-"]').forEach((code) => {
+    const lang = code.className.match(/language-([a-z0-9_-]+)/i)?.[1];
+    if (!lang) return;
+
+    const pre = code.parentElement;
+    if (pre.querySelector('.code-lang')) return; // 중복 방지
+
+    const tag = document.createElement('div');
+    tag.className = 'code-lang';
+    tag.textContent = lang;
+
+    pre.style.position = 'relative';
+    pre.prepend(tag);
+  });
+</script>
+  
 <body>
   <header class="site-header">
     <div class="site-title">
