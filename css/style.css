@@ -83,6 +83,7 @@ code{
   border-radius: 8px;
 }
 
+/* 기본 pre 스타일(일반 pre에만 적용) */
 pre{
   background: var(--code-bg);
   padding: 16px;
@@ -125,8 +126,9 @@ code::before{
   background: #f6f8fa;
   border-radius: 12px;
 
+  /* ✅ (수정) 좌우 padding을 조금 줄여서 전체가 과하게 밀리는 현상 완화 */
   /* 라벨이 코드와 겹치지 않게 위쪽 공간 확보 */
-  padding: 36px 16px 14px 16px;
+  padding: 34px 12px 14px 12px;
 
   overflow-x: auto;
 }
@@ -137,6 +139,18 @@ code::before{
   padding: 0 !important;
   margin: 0 !important;
   border-radius: 0 !important;
+}
+
+/* 일부 레이아웃은 .highlight 안에 pre가 직접 오지 않을 수 있어서 보강 */
+.highlighter-rouge .highlight pre{
+  background: transparent !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* ✅ (추가) Rouge 영역에서는 기본 pre padding(16px) 제거 */
+.highlighter-rouge pre{
+  padding: 0 !important;
 }
 
 .highlighter-rouge .highlight > pre.highlight > code{
@@ -183,13 +197,17 @@ code::before{
 
 /* =========================================================
    Rouge line numbers (table layout)
-   실제 HTML: pre > code > table.rouge-table ...
+   (Jekyll/Rouge HTML이 테마에 따라 조금씩 달라서 두 케이스 모두 커버)
+   케이스 A: td.rouge-gutter / td.rouge-code
+   케이스 B: td.gutter / td.code + pre.lineno
    ========================================================= */
 
+/* 공통: rouge table 리셋 */
 .highlighter-rouge .rouge-table{
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
+  margin: 0;               /* ✅ (추가) 테마별 기본 margin 제거 */
 }
 
 .highlighter-rouge .rouge-table td{
@@ -197,17 +215,21 @@ code::before{
   vertical-align: top;
 }
 
+/* -------------------------
+   케이스 A: .rouge-gutter / .rouge-code
+   ------------------------- */
+
 /* gutter(줄번호) */
 .highlighter-rouge .rouge-gutter{
   user-select: none;
   color: #9ca3af;
   white-space: pre;
 
-  /* ✅ 숫자와 코드 사이 간격을 넉넉하게 */
-  padding: 0 16px 0 0;
+  /* ✅ (수정) 숫자와 코드 사이 간격을 조금 줄여서 과한 여백 제거 */
+  padding: 0 12px 0 0;
 
-  /* ✅ 번호 폭 고정(자릿수 늘어나도 흔들리지 않게) */
-  min-width: 2.2em;
+  /* ✅ (수정) 번호 폭을 살짝 줄임 (자릿수 증가에도 안정적) */
+  min-width: 2.0em;
 
   text-align: right;
 }
@@ -222,11 +244,44 @@ code::before{
 .highlighter-rouge .rouge-code{
   width: 100%;
 
-  /* ✅ 코드가 너무 안쪽으로 밀리지 않게(과한 indent 방지) */
-  padding-left: 2px;
+  /* ✅ (수정) 코드가 안쪽으로 밀리는 현상 방지: 0으로 */
+  padding-left: 0;
 }
 
 .highlighter-rouge .rouge-code pre{
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* -------------------------
+   케이스 B: td.gutter / td.code + pre.lineno
+   (일부 테마/버전에선 이 형태로 나옴)
+   ------------------------- */
+
+.highlighter-rouge td.gutter{
+  user-select: none;
+  color: #9ca3af;
+  white-space: pre;
+
+  padding: 0 12px 0 0;   /* ✅ (추가) */
+  min-width: 2.0em;      /* ✅ (추가) */
+  text-align: right;
+}
+
+.highlighter-rouge td.gutter pre,
+.highlighter-rouge pre.lineno{
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.highlighter-rouge td.code{
+  width: 100%;
+  padding-left: 0;       /* ✅ (추가) */
+}
+
+.highlighter-rouge td.code pre{
   margin: 0;
   padding: 0;
   background: transparent;
