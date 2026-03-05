@@ -71,11 +71,11 @@ a:hover{ text-decoration: underline; }
   margin: 18px auto;
 }
 
-/* ===== Code blocks ===== */
+/* ===== Inline code & Code blocks ===== */
 pre, code{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
 }
-pre, code{ font-size: 14px; }
 
 code{
   background: var(--code-bg);
@@ -104,8 +104,22 @@ mjx-container[display="true"]{
   margin: 18px 0 !important;
 }
 
-/* ===== Rouge highlight theme + language label (FINAL) ===== */
+/* =========================================================
+   Rouge highlight + language label (single-label, safe)
+   ========================================================= */
 
+/* (중요) 테마/플러그인이 추가로 만드는 라벨(pseudo-element)을 전부 OFF
+   - 지금 “python 라벨 2개”는 보통 pre/code 쪽 ::before가 추가로 있어서 생김
+   - 우리는 highlight::before 하나만 쓰기로 했으니 나머지는 강제 차단
+*/
+pre.highlight::before,
+pre::before,
+code::before{
+  content: none !important;
+  display: none !important;
+}
+
+/* highlight block 스타일 */
 .highlight{
   position: relative;
   background: #f6f8fa;
@@ -138,7 +152,7 @@ mjx-container[display="true"]{
 .highlight .nb { color: #005cc5; } /* Builtins */
 .highlight .n  { color: #24292e; } /* Name */
 
-/* label box */
+/* label box (우리가 쓸 라벨은 이것 하나만) */
 .highlight::before{
   position: absolute;
   top: 8px;
@@ -159,7 +173,7 @@ mjx-container[display="true"]{
   content: "";
 }
 
-/* language labels (GitHub Pages/Rouge에서 가장 흔한 wrapper 기준) */
-.language-python .highlight::before{ content:"python"; display:inline-block; }
-.language-javascript .highlight::before{ content:"javascript"; display:inline-block; }
-.language-bash .highlight::before{ content:"bash"; display:inline-block; }
+/* language labels (GitHub Pages/Rouge wrapper 기준) */
+.language-python .highlight::before{ content: "python"; display: inline-block; }
+.language-javascript .highlight::before{ content: "javascript"; display: inline-block; }
+.language-bash .highlight::before{ content: "bash"; display: inline-block; }
