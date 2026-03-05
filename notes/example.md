@@ -6,7 +6,7 @@ date: 2026-03-05
 
 한글/영어: Representation learning은 재미있다.
 
-수식: 123
+수식: 12
 
 $$
 I(X;Y) = \mathbb{E}\left[\log\frac{p(x,y)}{p(x)p(y)}\right]
