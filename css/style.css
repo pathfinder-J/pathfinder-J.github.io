@@ -116,3 +116,21 @@ mjx-container[display="true"]{
 .highlight .nf { color: #6f42c1; } /* Function name */
 .highlight .nb { color: #005cc5; } /* Builtins */
 .highlight .n  { color: #24292e; } /* Name */
+
+/* ===== Code language label ===== */
+pre { position: relative; }
+
+pre .code-lang{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 12px;
+  color: #666;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 2px 8px;
+  line-height: 1.4;
+}
+
+
