@@ -200,7 +200,7 @@ code::before{
 }
 
 
-/* line number 표시 */
+/* line number 표시 
 .highlight pre code span::before {
   content: counter(line);
 
@@ -212,7 +212,7 @@ code::before{
   color: #9ca3af;
 
   user-select: none;
-}
+}*/
 
 /* ===== Rouge line numbers (minimal) ===== */
 
