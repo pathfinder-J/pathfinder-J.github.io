@@ -106,18 +106,9 @@ mjx-container[display="true"]{
 
 /* =========================================================
    Rouge highlight + language label (single label)
-   HTML 구조:
-   <div class="language-python highlighter-rouge">
-     <div class="highlight">
-       <pre class="highlight"><code>...</code></pre>
-     </div>
-   </div>
    ========================================================= */
 
-/* 1) (중요) 테마/기본 CSS가 pre/code 쪽에 만드는 라벨(pseudo) 강제 OFF
-   - 지금 “라벨 2개”는 여기서 생기는 경우가 압도적으로 많음.
-   - 우리는 .highlight::before 하나만 쓸 것.
-*/
+/* (중요) 테마/기본 CSS가 pre/code 쪽에 만드는 라벨(pseudo) 강제 OFF */
 .highlighter-rouge pre::before,
 .highlighter-rouge pre.highlight::before,
 .highlighter-rouge code::before,
@@ -128,7 +119,7 @@ code::before{
   display: none !important;
 }
 
-/* 2) highlight 박스 스타일 */
+/* highlight 박스 스타일 */
 .highlight{
   position: relative;
   background: #f6f8fa;
@@ -140,18 +131,21 @@ code::before{
   overflow-x: auto;
 }
 
-.highlight pre{
-  margin: 0;
-  padding: 0;
-  background: transparent;
+/* highlight 안쪽 pre/code는 “그릇” 역할만 */
+.highlighter-rouge .highlight > pre.highlight{
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
 }
 
-.highlight code{
-  background: transparent;
-  padding: 0;
+.highlighter-rouge .highlight > pre.highlight > code{
+  background: transparent !important;
+  padding: 0 !important;
+  display: block;
 }
 
-/* 3) 토큰 색상 */
+/* 토큰 색상 */
 .highlight .c { color: #6a737d; } /* Comment */
 .highlight .k { color: #d73a49; } /* Keyword */
 .highlight .o { color: #d73a49; } /* Operator */
@@ -161,7 +155,7 @@ code::before{
 .highlight .nb { color: #005cc5; } /* Builtins */
 .highlight .n  { color: #24292e; } /* Name */
 
-/* 4) 라벨 박스 (이것만 남김) */
+/* 라벨 박스 */
 .highlight::before{
   position: absolute;
   top: 8px;
@@ -182,83 +176,16 @@ code::before{
   content: "";
 }
 
-/* 5) 언어별 라벨 */
+/* 언어별 라벨 */
 .language-python .highlight::before{ content:"python"; display:inline-block; }
 .language-javascript .highlight::before{ content:"javascript"; display:inline-block; }
 .language-bash .highlight::before{ content:"bash"; display:inline-block; }
 
+/* =========================================================
+   Rouge line numbers (table layout)
+   실제 HTML: pre > code > table.rouge-table ...
+   ========================================================= */
 
-/* ===== Line numbers ===== */
-
-.highlight pre {
-  counter-reset: line;
-}
-
-/* 각 줄을 block으로 만들어야 line number 붙일 수 있음 */
-.highlight pre code {
-  display: block;
-}
-
-
-/* line number 표시 
-.highlight pre code span::before {
-  content: counter(line);
-
-  display: inline-block;
-  width: 2.5em;
-  margin-right: 1em;
-
-  text-align: right;
-  color: #9ca3af;
-
-  user-select: none;
-}*/
-
-/* ===== Rouge line numbers (minimal) ===== */
-
-.rouge-table {
-  border-spacing: 0;
-}
-
-.rouge-gutter {
-  padding-right: 12px;
-  text-align: right;
-  user-select: none;
-  color: #9ca3af;
-}
-
-.rouge-gutter pre {
-  margin: 0;
-}
-
-.rouge-code {
-  padding-left: 8px;
-}
-
-/* ===== Rouge line_numbers fix (table is inside pre>code) ===== */
-
-/* line_numbers 켜진 블록에서: pre/code의 기존 스타일이 table 레이아웃을 망가뜨림 */
-.highlighter-rouge .highlight > pre.highlight{
-  /* pre에 주어진 배경/패딩이 table과 중복되지 않게 정리 */
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-}
-
-/* code도 마찬가지로 '그릇' 역할만 */
-.highlighter-rouge .highlight > pre.highlight > code{
-  background: transparent !important;
-  padding: 0 !important;
-  display: block;
-}
-
-/* 실제 박스 스타일은 highlight에만 남긴다(너가 이미 highlight에 배경/라운드/패딩 줌) */
-.highlighter-rouge .highlight{
-  overflow-x: auto;
-}
-
-/* 테이블 정렬 */
 .highlighter-rouge .rouge-table{
   width: 100%;
   border-collapse: collapse;
@@ -270,15 +197,21 @@ code::before{
   vertical-align: top;
 }
 
-/* gutter (줄번호) */
+/* gutter(줄번호) */
 .highlighter-rouge .rouge-gutter{
   user-select: none;
   color: #9ca3af;
   white-space: pre;
-  padding: 0 12px 0 0;
+
+  /* ✅ 숫자와 코드 사이 간격을 넉넉하게 */
+  padding: 0 16px 0 0;
+
+  /* ✅ 번호 폭 고정(자릿수 늘어나도 흔들리지 않게) */
+  min-width: 2.2em;
+
+  text-align: right;
 }
 
-/* gutter 내부 pre */
 .highlighter-rouge .rouge-gutter pre{
   margin: 0;
   padding: 0;
@@ -288,15 +221,13 @@ code::before{
 /* code 셀 */
 .highlighter-rouge .rouge-code{
   width: 100%;
+
+  /* ✅ 코드가 너무 안쪽으로 밀리지 않게(과한 indent 방지) */
+  padding-left: 2px;
 }
 
-/* code 셀 내부 pre */
 .highlighter-rouge .rouge-code pre{
   margin: 0;
   padding: 0;
   background: transparent;
 }
-
-
-
-
