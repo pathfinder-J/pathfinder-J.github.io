@@ -235,7 +235,67 @@ code::before{
   padding-left: 8px;
 }
 
+/* ===== Rouge line_numbers fix (table is inside pre>code) ===== */
 
+/* line_numbers 켜진 블록에서: pre/code의 기존 스타일이 table 레이아웃을 망가뜨림 */
+.highlighter-rouge .highlight > pre.highlight{
+  /* pre에 주어진 배경/패딩이 table과 중복되지 않게 정리 */
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* code도 마찬가지로 '그릇' 역할만 */
+.highlighter-rouge .highlight > pre.highlight > code{
+  background: transparent !important;
+  padding: 0 !important;
+  display: block;
+}
+
+/* 실제 박스 스타일은 highlight에만 남긴다(너가 이미 highlight에 배경/라운드/패딩 줌) */
+.highlighter-rouge .highlight{
+  overflow-x: auto;
+}
+
+/* 테이블 정렬 */
+.highlighter-rouge .rouge-table{
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.highlighter-rouge .rouge-table td{
+  padding: 0;
+  vertical-align: top;
+}
+
+/* gutter (줄번호) */
+.highlighter-rouge .rouge-gutter{
+  user-select: none;
+  color: #9ca3af;
+  white-space: pre;
+  padding: 0 12px 0 0;
+}
+
+/* gutter 내부 pre */
+.highlighter-rouge .rouge-gutter pre{
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* code 셀 */
+.highlighter-rouge .rouge-code{
+  width: 100%;
+}
+
+/* code 셀 내부 pre */
+.highlighter-rouge .rouge-code pre{
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
 
 
 
