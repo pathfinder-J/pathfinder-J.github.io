@@ -186,3 +186,42 @@ code::before{
 .language-python .highlight::before{ content:"python"; display:inline-block; }
 .language-javascript .highlight::before{ content:"javascript"; display:inline-block; }
 .language-bash .highlight::before{ content:"bash"; display:inline-block; }
+
+
+/* ===== Line numbers ===== */
+
+.highlight pre {
+  counter-reset: line;
+}
+
+/* 각 줄을 block으로 만들어야 line number 붙일 수 있음 */
+.highlight pre code {
+  display: block;
+}
+
+/* 줄 번호 생성 */
+.highlight pre code span {
+  display: block;
+  counter-increment: line;
+}
+
+/* line number 표시 */
+.highlight pre code span::before {
+  content: counter(line);
+
+  display: inline-block;
+  width: 2.5em;
+  margin-right: 1em;
+
+  text-align: right;
+  color: #9ca3af;
+
+  user-select: none;
+}
+
+
+
+
+
+
+
