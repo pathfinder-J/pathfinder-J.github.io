@@ -133,4 +133,52 @@ pre .code-lang{
   line-height: 1.4;
 }
 
+/* ===== code block ===== */
+
+.highlight{
+  position:relative;
+  padding:18px 16px 14px 16px;
+}
+
+/* language label */
+
+.highlight::before{
+  position:absolute;
+  top:6px;
+  left:10px;
+
+  font-size:12px;
+  font-weight:600;
+  color:#6b7280;
+
+  background:#f3f4f6;
+  border:1px solid #e5e7eb;
+  border-radius:6px;
+
+  padding:2px 8px;
+}
+
+/* python */
+
+.highlight code.language-python::before{
+  content:"python";
+}
+
+/* javascript */
+
+.highlight code.language-javascript::before{
+  content:"javascript";
+}
+
+/* bash */
+
+.highlight code.language-bash::before{
+  content:"bash";
+}
+
+
+
+
+
+
 
