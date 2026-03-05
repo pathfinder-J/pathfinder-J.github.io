@@ -1,0 +1,21 @@
+body{
+  font-family:
+    "Noto Sans KR",
+    "Noto Sans",
+    system-ui,
+    sans-serif;
+
+  max-width: 850px;
+  margin: auto;
+  padding: 40px;
+  line-height: 1.7;
+}
+
+h1,h2,h3{
+  margin-top: 40px;
+}
+
+code{
+  background: #f4f4f4;
+  padding: 3px 6px;
+}
