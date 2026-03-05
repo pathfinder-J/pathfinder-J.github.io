@@ -1,10 +1,44 @@
+<!doctype html>
+<html lang="ko">
 <head>
-<meta charset="utf-8">
-<title>{{ page.title }}</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>{{ page.title }} | {{ site.title }}</title>
 
-<link rel="stylesheet" href="/css/style.css">
+  <!-- Noto Sans KR -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" />
 
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <!-- MathJax (LaTeX) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
+<body>
+  <header class="site-header">
+    <div class="site-title">
+      <a href="/">{{ site.title }}</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <h1 class="post-title">{{ page.title }}</h1>
+
+      {% if page.date %}
+        <div class="post-meta">{{ page.date | date: "%Y-%m-%d" }}</div>
+      {% endif %}
+
+      <div class="post-content">
+        {{ content }}
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <small>© {{ site.title }}</small>
+  </footer>
+</body>
+</html>
