@@ -1,29 +1,104 @@
-body{
-  font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
-  max-width: 850px;
-  margin: 0 auto;
-  padding: 36px 18px;
-  line-height: 1.75;
+/* ===== Base ===== */
+:root{
+  --text: #111;
+  --muted: #666;
+  --bg: #fff;
+  --link: #0b57d0;
+  --code-bg: #f6f8fa;
+  --border: #e6e6e6;
 }
 
-a{ text-decoration: none; }
+html{ background: var(--bg); }
+body{
+  margin: 0;
+  color: var(--text);
+  font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.container{
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 36px 18px 60px;
+}
+
+/* ===== Header / Footer ===== */
+.site-header{
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
+}
+.site-title a{
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+}
+.site-title a:hover{ text-decoration: underline; }
+
+.site-footer{
+  border-top: 1px solid var(--border);
+  padding: 18px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ===== Typography ===== */
+.post-title{
+  margin: 18px 0 8px;
+  font-size: 32px;
+  line-height: 1.2;
+}
+.post-meta{
+  color: var(--muted);
+  margin-bottom: 22px;
+  font-size: 14px;
+}
+
+.post-content p{ margin: 14px 0; }
+.post-content h2{ margin-top: 36px; font-size: 24px; }
+.post-content h3{ margin-top: 26px; font-size: 20px; }
+
+a{ color: var(--link); }
 a:hover{ text-decoration: underline; }
 
-img{
+/* ===== Images ===== */
+.post-content img{
   max-width: 100%;
   height: auto;
   display: block;
   margin: 18px auto;
 }
 
+/* ===== Code blocks ===== */
 pre, code{
-  background: #f4f4f4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+code{
+  background: var(--code-bg);
+  padding: 2px 6px;
   border-radius: 8px;
 }
 
-code{ padding: 2px 6px; }
-pre{ padding: 14px; overflow-x: auto; }
+pre{
+  background: var(--code-bg);
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 18px 0;
+}
 
-h1{ margin-top: 32px; }
-h2{ margin-top: 32px; }
-h3{ margin-top: 24px; }
+pre code{
+  background: transparent;
+  padding: 0;
+}
+
+/* ===== MathJax spacing ===== */
+.MathJax, mjx-container{
+  font-size: 1.06em;
+}
+mjx-container[display="true"]{
+  margin: 18px 0 !important;
+}
