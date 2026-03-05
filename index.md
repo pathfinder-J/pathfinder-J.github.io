@@ -1,9 +1,4 @@
 
----
-layout: default
-title: Pathfinder Research Space
----
-
 # Pathfinder Research Space
 
 Welcome to my research notes.
