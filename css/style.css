@@ -102,3 +102,17 @@ pre code{
 mjx-container[display="true"]{
   margin: 18px 0 !important;
 }
+
+/* ===== Rouge highlight theme (minimal) ===== */
+.highlight { background: #f6f8fa; border-radius: 12px; padding: 16px; overflow-x: auto; }
+.highlight pre { margin: 0; padding: 0; background: transparent; }
+.highlight code { background: transparent; padding: 0; }
+
+.highlight .c { color: #6a737d; } /* Comment */
+.highlight .k { color: #d73a49; } /* Keyword */
+.highlight .o { color: #d73a49; } /* Operator */
+.highlight .s { color: #032f62; } /* String */
+.highlight .mi { color: #005cc5; } /* Number */
+.highlight .nf { color: #6f42c1; } /* Function name */
+.highlight .nb { color: #005cc5; } /* Builtins */
+.highlight .n  { color: #24292e; } /* Name */
