@@ -6,6 +6,11 @@ Welcome to my research notes.
 
 ## Topics
 
+## Notes
+
+- [Example](notes/example.md)
+
+
 ### Information Theory
 
 - [Entropy](information-theory/entropy.md)
