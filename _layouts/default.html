@@ -32,7 +32,7 @@
     pre.prepend(tag);
   });
 </script>
-  
+
 <body>
   <header class="site-header">
     <div class="site-title">
@@ -42,7 +42,9 @@
 
   <main class="container">
     <article class="post">
-      <h1 class="post-title">{{ page.title }}</h1>
+      {% unless page.url == "/" %}
+        <h1 class="post-title">{{ page.title }}</h1>
+      {% endunless %}
 
       {% if page.date %}
         <div class="post-meta">{{ page.date | date: "%Y-%m-%d" }}</div>
