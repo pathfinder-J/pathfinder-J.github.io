@@ -214,6 +214,26 @@ code::before{
   user-select: none;
 }
 
+/* ===== Rouge line numbers (minimal) ===== */
+
+.rouge-table {
+  border-spacing: 0;
+}
+
+.rouge-gutter {
+  padding-right: 12px;
+  text-align: right;
+  user-select: none;
+  color: #9ca3af;
+}
+
+.rouge-gutter pre {
+  margin: 0;
+}
+
+.rouge-code {
+  padding-left: 8px;
+}
 
 
 
