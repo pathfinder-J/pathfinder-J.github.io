@@ -264,3 +264,61 @@ font-size: 13px;
   background:#e6ffec;
   border-color:#2da44e;
 }
+
+/* =========================================
+   Code block expand / collapse
+   ========================================= */
+
+/* 버튼 자리 확보 */
+.highlighter-rouge .highlight{
+  position: relative;
+}
+
+/* 접힘 상태 */
+.highlighter-rouge .highlight.is-collapsed{
+  max-height: 220px;   /* 원하는 높이로 조절 가능 */
+  overflow: hidden;
+}
+
+/* 아래쪽 그라데이션 */
+.highlighter-rouge .highlight.is-collapsed::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  background: linear-gradient(to bottom, rgba(246,248,250,0), rgba(246,248,250,1));
+  pointer-events: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* expand/collapse 버튼 */
+.code-toggle-btn{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 3;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  padding: 4px 8px;
+  background: #ffffff;
+  color: #24292f;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* hover */
+.code-toggle-btn:hover{
+  background: #f6f8fa;
+}
+
+/* 짧은 코드에는 버튼 숨김 */
+.highlighter-rouge .highlight.is-short .code-toggle-btn{
+  display: none;
+}
