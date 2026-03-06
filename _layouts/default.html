@@ -14,64 +14,8 @@
 
   <!-- MathJax (LaTeX) -->
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script defer>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('pre > code[class^="language-"]').forEach((code) => {
-        const lang = code.className.match(/language-([a-z0-9_-]+)/i)?.[1];
-        if (!lang) return;
-
-        const pre = code.parentElement;
-        if (!pre || pre.querySelector('.code-lang')) return;
-
-        const tag = document.createElement('div');
-        tag.className = 'code-lang';
-        tag.textContent = lang;
-
-        pre.style.position = 'relative';
-        pre.prepend(tag);
-      });
-    });
-  </script>
 </head>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const COLLAPSED_HEIGHT = 220; // CSS max-height와 맞추면 됨
-
-  document.querySelectorAll(".highlighter-rouge .highlight").forEach(function(block){
-    const contentHeight = block.scrollHeight;
-
-    // 짧은 코드면 버튼 필요 없음
-    if (contentHeight <= COLLAPSED_HEIGHT + 20) {
-      block.classList.add("is-short");
-      return;
-    }
-
-    // 기본은 접힌 상태
-    block.classList.add("is-collapsed");
-
-    const button = document.createElement("button");
-    button.className = "code-toggle-btn";
-    button.type = "button";
-    button.textContent = "Expand";
-
-    button.addEventListener("click", function () {
-      const collapsed = block.classList.contains("is-collapsed");
-
-      if (collapsed) {
-        block.classList.remove("is-collapsed");
-        button.textContent = "Collapse";
-      } else {
-        block.classList.add("is-collapsed");
-        button.textContent = "Expand";
-      }
-    });
-
-    block.appendChild(button);
-  });
-});
-</script>
-  
 <body>
   <header class="site-header">
     <div class="site-title">
@@ -98,44 +42,66 @@ document.addEventListener("DOMContentLoaded", function () {
   <footer class="site-footer">
     <small>© {{ site.title }}</small>
   </footer>
-</body>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const COLLAPSED_HEIGHT = 220;
 
-  document.querySelectorAll(".highlighter-rouge .highlight").forEach(function(block){
+      document.querySelectorAll(".highlighter-rouge > .highlight").forEach(function(block){
+        const contentHeight = block.scrollHeight;
 
-    const button = document.createElement("button");
-    button.className = "code-copy-btn";
-    button.textContent = "Copy";
+        if (contentHeight <= COLLAPSED_HEIGHT + 20) {
+          block.classList.add("is-short");
+        } else {
+          block.classList.add("is-collapsed");
 
-    block.appendChild(button);
+          const toggleBtn = document.createElement("button");
+          toggleBtn.className = "code-toggle-btn";
+          toggleBtn.type = "button";
+          toggleBtn.textContent = "Expand";
 
-    button.addEventListener("click", function(){
+          toggleBtn.addEventListener("click", function () {
+            const collapsed = block.classList.contains("is-collapsed");
 
-      const code = block.querySelector(".rouge-code pre");
+            if (collapsed) {
+              block.classList.remove("is-collapsed");
+              toggleBtn.textContent = "Collapse";
+            } else {
+              block.classList.add("is-collapsed");
+              toggleBtn.textContent = "Expand";
+            }
+          });
 
-      if(!code) return;
+          block.appendChild(toggleBtn);
+        }
 
-      const text = code.innerText;
+        if (!block.querySelector(".code-copy-btn")) {
+          const copyBtn = document.createElement("button");
+          copyBtn.className = "code-copy-btn";
+          copyBtn.type = "button";
+          copyBtn.textContent = "Copy";
 
-      navigator.clipboard.writeText(text).then(() => {
+          copyBtn.addEventListener("click", function () {
+            const code = block.querySelector(".rouge-code pre");
+            if (!code) return;
 
-        button.textContent = "Copied";
-        button.classList.add("copied");
+            const text = code.innerText;
 
-        setTimeout(() => {
-          button.textContent = "Copy";
-          button.classList.remove("copied");
-        },1500);
+            navigator.clipboard.writeText(text).then(() => {
+              copyBtn.textContent = "Copied";
+              copyBtn.classList.add("copied");
 
+              setTimeout(() => {
+                copyBtn.textContent = "Copy";
+                copyBtn.classList.remove("copied");
+              }, 1500);
+            });
+          });
+
+          block.appendChild(copyBtn);
+        }
       });
-
     });
-
-  });
-
-});
-</script>
-
+  </script>
+</body>
 </html>
