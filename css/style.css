@@ -1,59 +1,59 @@
 /* ===== Base ===== */
 :root{
---text: #111;
---muted: #666;
---bg: #fff;
---link: #0b57d0;
---code-bg: #f6f8fa;
---border: #e6e6e6;
+  --text: #111;
+  --muted: #666;
+  --bg: #fff;
+  --link: #0b57d0;
+  --code-bg: #f6f8fa;
+  --border: #e6e6e6;
 }
 
 html{ background: var(--bg); }
 body{
-margin: 0;
-color: var(--text);
-font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
-font-size: 16px;
-line-height: 1.75;
--webkit-font-smoothing: antialiased;
-text-rendering: optimizeLegibility;
+  margin: 0;
+  color: var(--text);
+  font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .container{
-max-width: 860px;
-margin: 0 auto;
-padding: 36px 18px 60px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 36px 18px 60px;
 }
 
 /* ===== Header / Footer ===== */
 .site-header{
-border-bottom: 1px solid var(--border);
-padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
 }
 .site-title a{
-color: var(--text);
-text-decoration: none;
-font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
 }
 .site-title a:hover{ text-decoration: underline; }
 
 .site-footer{
-border-top: 1px solid var(--border);
-padding: 18px;
-color: var(--muted);
-text-align: center;
+  border-top: 1px solid var(--border);
+  padding: 18px;
+  color: var(--muted);
+  text-align: center;
 }
 
 /* ===== Typography ===== */
 .post-title{
-margin: 18px 0 8px;
-font-size: 32px;
-line-height: 1.2;
+  margin: 18px 0 8px;
+  font-size: 32px;
+  line-height: 1.2;
 }
 .post-meta{
-color: var(--muted);
-margin-bottom: 22px;
-font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 22px;
+  font-size: 14px;
 }
 
 .post-content p{ margin: 14px 0; }
@@ -65,68 +65,74 @@ a:hover{ text-decoration: underline; }
 
 /* ===== Images ===== */
 .post-content img{
-max-width: 100%;
-height: auto;
-display: block;
-margin: 18px auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 18px auto;
 }
 
 /* ===== Inline code & Code blocks ===== */
 pre, code{
-font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-font-size: 14px;
+  font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-size: 14px;
 }
 
 code{
-background: var(--code-bg);
-padding: 2px 6px;
-border-radius: 8px;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 8px;
 }
 
 pre{
-background: var(--code-bg);
-padding: 16px;
-border-radius: 12px;
-overflow-x: auto;
-margin: 18px 0;
+  background: var(--code-bg);
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 18px 0;
 }
 
 pre code{
-background: transparent;
-padding: 0;
+  background: transparent;
+  padding: 0;
 }
 
 /* ===== MathJax spacing ===== */
 .MathJax, mjx-container{
-font-size: 1.06em;
+  font-size: 1.06em;
 }
 mjx-container[display="true"]{
-margin: 18px 0 !important;
+  margin: 18px 0 !important;
 }
 
 /* =========================================================
-Rouge highlight
-========================================================= */
+   Rouge highlight
+   ========================================================= */
 
 .highlighter-rouge pre::before,
 .highlighter-rouge code::before{
-content: none !important;
-display: none !important;
+  content: none !important;
+  display: none !important;
+}
+
+/* ✅ 코드블럭끼리 margin (붙어 보이는 문제 해결) */
+.highlighter-rouge{
+  margin: 24px 0;
 }
 
 .highlight{
-position: relative;
-background: #f6f8fa;
-border-radius: 12px;
-padding: 34px 12px 14px 12px;
-overflow-x: auto;
+  position: relative;
+  background: #f6f8fa;
+  border-radius: 12px;
+  padding: 34px 12px 14px 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Rouge 내부 pre reset */
 .highlighter-rouge pre{
-padding: 0 !important;
-margin: 0 !important;
-background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
 }
 
 /* ===== Syntax colors ===== */
@@ -140,25 +146,24 @@ background: transparent !important;
 .highlight .n  { color: #24292e; }
 
 /* ===== Language label ===== */
-
 .highlight::before{
-position: absolute;
-top: 8px;
-left: 12px;
+  position: absolute;
+  top: 8px;
+  left: 12px;
 
-font-size: 12px;
-font-weight: 600;
-color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
 
-background: #f3f4f6;
-border: 1px solid #e5e7eb;
-border-radius: 6px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
 
-padding: 2px 8px;
-line-height: 1.4;
+  padding: 2px 8px;
+  line-height: 1.4;
 
-display: none;
-content: "";
+  display: none;
+  content: "";
 }
 
 .language-python .highlight::before{ content:"python"; display:inline-block; }
@@ -166,121 +171,72 @@ content: "";
 .language-bash .highlight::before{ content:"bash"; display:inline-block; }
 
 /* =========================================================
-Rouge line numbers
-========================================================= */
+   Rouge line numbers
+   ========================================================= */
 
 .highlighter-rouge .rouge-table{
-width: 100%;
-border-collapse: collapse;
-border-spacing: 0;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .highlighter-rouge .rouge-table td{
-padding: 0;
-vertical-align: top;
+  padding: 0;
+  vertical-align: top;
 }
 
 /* line numbers */
 .highlighter-rouge td.rouge-gutter{
-user-select: none;
-color: #9ca3af;
-white-space: pre;
-text-align: right;
+  user-select: none;
+  color: #9ca3af;
+  white-space: pre;
+  text-align: right;
 
-padding-right: 12px;
-width: 1%;
+  padding-right: 12px;
+  width: 1%;
 }
 
 .highlighter-rouge td.rouge-gutter pre{
-margin: 0;
+  margin: 0;
 }
 
 /* code area */
 .highlighter-rouge td.rouge-code{
-width: 100%;
+  width: 100%;
 }
 
 .highlighter-rouge td.rouge-code pre{
-margin: 0;
+  margin: 0;
 }
 
 /* =========================================================
-Code UX improvements
-========================================================= */
+   Code UX improvements
+   ========================================================= */
 
-/* line-height 안정화 */
 .highlighter-rouge pre,
 .highlighter-rouge code{
-line-height: 1.5;
+  line-height: 1.5;
 }
 
-/* 코드 드래그 색상 */
 .highlighter-rouge ::selection{
-background: #cce2ff;
+  background: #cce2ff;
 }
 
-/* 가로 스크롤 부드럽게 */
-.highlight{
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-}
-
-/* 모바일 코드 크기 */
 @media (max-width: 600px){
-pre,code{
-font-size: 13px;
-}
-}
-
-/* copy button */
-
-.code-copy-btn{
-  position:absolute;
-  top:8px;
-  right:10px;
-
-  font-size:12px;
-  font-weight:500;
-
-  padding:4px 8px;
-
-  background:#ffffff;
-  border:1px solid #d0d7de;
-  border-radius:6px;
-
-  cursor:pointer;
-
-  opacity:0;
-  transition:opacity .15s;
+  pre,code{
+    font-size: 13px;
+  }
 }
 
-/* hover 시 버튼 표시 */
-.highlight:hover .code-copy-btn{
-  opacity:1;
-}
+/* =========================================================
+   Expand / Collapse (CSS part)
+   ========================================================= */
 
-/* 클릭 후 상태 */
-.code-copy-btn.copied{
-  background:#e6ffec;
-  border-color:#2da44e;
-}
-
-/* =========================================
-   Code block expand / collapse
-   ========================================= */
-
-/* 버튼 자리 확보 */
-.highlighter-rouge .highlight{
-  position: relative;
-}
-
-/* 접힘 상태 */
 .highlighter-rouge .highlight.is-collapsed{
-  max-height: 220px;   /* 원하는 높이로 조절 가능 */
+  max-height: 220px;
   overflow: hidden;
 }
 
-/* 아래쪽 그라데이션 */
 .highlighter-rouge .highlight.is-collapsed::after{
   content: "";
   position: absolute;
@@ -294,47 +250,58 @@ font-size: 13px;
   border-bottom-right-radius: 12px;
 }
 
-/* expand/collapse 버튼 */
+/* =========================================================
+   Buttons: Copy / Expand  ✅중복 정의 제거 + 겹침 방지
+   ========================================================= */
+
+/* 공통 버튼 스타일 */
+.code-copy-btn,
 .code-toggle-btn{
   position: absolute;
-  top: 8px;
   right: 10px;
-  z-index: 3;
+  z-index: 10;
 
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
 
-  padding: 4px 8px;
+  padding: 4px 10px;
   background: #ffffff;
   color: #24292f;
+
   border: 1px solid #d0d7de;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-/* hover */
+.code-copy-btn:hover,
 .code-toggle-btn:hover{
   background: #f6f8fa;
 }
 
-/* 짧은 코드에는 버튼 숨김 */
+/* Expand는 위 */
+.code-toggle-btn{
+  top: 8px;
+}
+
+/* Copy는 아래 (겹침 방지) */
+.code-copy-btn{
+  top: 44px;
+}
+
+/* 짧은 코드에는 Expand 숨김 */
 .highlighter-rouge .highlight.is-short .code-toggle-btn{
   display: none;
 }
 
-/* Copy 버튼은 Expand 아래로 한 칸 내리기 */
-.code-copy-btn{
-  position: absolute;
-  top: 44px;     /* ✅ Expand(8px) 아래로 */
-  right: 10px;
-  z-index: 4;
+/* Copied 상태 */
+.code-copy-btn.copied{
+  background:#e6ffec;
+  border-color:#2da44e;
 }
 
-/* Expand 버튼은 맨 위 */
-.code-toggle-btn{
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  z-index: 5;
-}
+/* ✅ Copy 버튼을 hover에서만 보이게 하고 싶으면 아래 2줄만 켜면 됨 */
+/*
+.code-copy-btn{ opacity:0; transition:opacity .15s; }
+.highlight:hover .code-copy-btn{ opacity:1; }
+*/
