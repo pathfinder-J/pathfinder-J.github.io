@@ -136,8 +136,28 @@ code{
   margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   border-radius: 0 !important;
   line-height: 1.5;
+}
+
+/* remove inner rectangle completely */
+.highlighter-rouge .highlight pre,
+.highlighter-rouge .highlight code,
+.highlighter-rouge .highlight .rouge-code,
+.highlighter-rouge .highlight .rouge-code pre,
+.highlighter-rouge .highlight .rouge-gutter,
+.highlighter-rouge .highlight .rouge-gutter pre,
+.highlighter-rouge .highlight .rouge-table,
+.highlighter-rouge .highlight .rouge-table tbody,
+.highlighter-rouge .highlight .rouge-table tr,
+.highlighter-rouge .highlight .rouge-table td{
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* line-number table */
