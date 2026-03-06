@@ -97,7 +97,7 @@ code{
   border-radius: 8px;
 }
 
-/* ===== code block wrapper (toolbar fixed area) ===== */
+/* ===== code block wrapper ===== */
 .code-block-shell{
   position: relative;
   margin: 24px 0;
@@ -107,14 +107,22 @@ code{
 .highlighter-rouge > .highlight{
   position: relative;
   background: var(--code-bg);
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
+  padding: 44px 12px 14px 12px;
+  overflow: hidden;
+}
 
-  /* top padding for language label + toolbar */
-  padding: 34px 12px 14px 12px;
-
+/* actual horizontal scroll area */
+.code-scroll{
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+}
+
+/* inner visible area for collapse */
+.code-viewport{
+  position: relative;
 }
 
 /* reset Rouge inner pre/code */
@@ -135,10 +143,11 @@ code{
 }
 
 /* ===== Language label (left) ===== */
-.highlighter-rouge > .highlight::before{
+.code-lang{
   position: absolute;
-  top: 8px;
+  top: 10px;
   left: 12px;
+  z-index: 20;
 
   font-size: 12px;
   font-weight: 600;
@@ -149,29 +158,13 @@ code{
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   padding: 2px 8px;
-
-  content: "";
-  display: none;
-}
-
-.language-python.highlighter-rouge > .highlight::before{
-  content: "python";
-  display: inline-block;
-}
-
-.language-javascript.highlighter-rouge > .highlight::before{
-  content: "javascript";
-  display: inline-block;
-}
-
-.language-bash.highlighter-rouge > .highlight::before{
-  content: "bash";
-  display: inline-block;
+  white-space: nowrap;
 }
 
 /* ===== Rouge table / line numbers ===== */
 .highlighter-rouge .rouge-table{
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
 }
@@ -195,18 +188,22 @@ code{
   margin: 0 !important;
 }
 
+/* make plain pre also scroll nicely if Rouge table is absent */
+.highlighter-rouge .highlight > pre{
+  min-width: max-content;
+}
+
 /* ===== selection ===== */
 .highlighter-rouge ::selection{
   background: #cce2ff;
 }
 
 /* ===== collapse ===== */
-.highlighter-rouge > .highlight.is-collapsed{
-  max-height: 220px;
+.highlighter-rouge > .highlight.is-collapsed .code-viewport{
   overflow: hidden;
 }
 
-.highlighter-rouge > .highlight.is-collapsed::after{
+.highlighter-rouge > .highlight.is-collapsed .code-viewport::after{
   content: "";
   position: absolute;
   left: 0;
