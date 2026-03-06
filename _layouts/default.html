@@ -61,4 +61,43 @@
     <small>© {{ site.title }}</small>
   </footer>
 </body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.querySelectorAll(".highlighter-rouge .highlight").forEach(function(block){
+
+    const button = document.createElement("button");
+    button.className = "code-copy-btn";
+    button.textContent = "Copy";
+
+    block.appendChild(button);
+
+    button.addEventListener("click", function(){
+
+      const code = block.querySelector(".rouge-code pre");
+
+      if(!code) return;
+
+      const text = code.innerText;
+
+      navigator.clipboard.writeText(text).then(() => {
+
+        button.textContent = "Copied";
+        button.classList.add("copied");
+
+        setTimeout(() => {
+          button.textContent = "Copy";
+          button.classList.remove("copied");
+        },1500);
+
+      });
+
+    });
+
+  });
+
+});
+</script>
+
 </html>
