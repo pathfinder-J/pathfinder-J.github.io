@@ -34,6 +34,44 @@
   </script>
 </head>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const COLLAPSED_HEIGHT = 220; // CSS max-height와 맞추면 됨
+
+  document.querySelectorAll(".highlighter-rouge .highlight").forEach(function(block){
+    const contentHeight = block.scrollHeight;
+
+    // 짧은 코드면 버튼 필요 없음
+    if (contentHeight <= COLLAPSED_HEIGHT + 20) {
+      block.classList.add("is-short");
+      return;
+    }
+
+    // 기본은 접힌 상태
+    block.classList.add("is-collapsed");
+
+    const button = document.createElement("button");
+    button.className = "code-toggle-btn";
+    button.type = "button";
+    button.textContent = "Expand";
+
+    button.addEventListener("click", function () {
+      const collapsed = block.classList.contains("is-collapsed");
+
+      if (collapsed) {
+        block.classList.remove("is-collapsed");
+        button.textContent = "Collapse";
+      } else {
+        block.classList.add("is-collapsed");
+        button.textContent = "Expand";
+      }
+    });
+
+    block.appendChild(button);
+  });
+});
+</script>
+  
 <body>
   <header class="site-header">
     <div class="site-title">
