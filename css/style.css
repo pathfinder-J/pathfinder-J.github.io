@@ -322,3 +322,19 @@ font-size: 13px;
 .highlighter-rouge .highlight.is-short .code-toggle-btn{
   display: none;
 }
+
+/* Copy 버튼은 Expand 아래로 한 칸 내리기 */
+.code-copy-btn{
+  position: absolute;
+  top: 44px;     /* ✅ Expand(8px) 아래로 */
+  right: 10px;
+  z-index: 4;
+}
+
+/* Expand 버튼은 맨 위 */
+.code-toggle-btn{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 5;
+}
