@@ -71,88 +71,66 @@ a:hover{ text-decoration: underline; }
   margin: 18px auto;
 }
 
-/* ===== Inline code & Code blocks ===== */
+/* =========================================================
+   Inline code + Rouge code blocks (Clean rebuild)
+   ========================================================= */
+
+/* ===== Inline code ===== */
 pre, code{
   font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   font-size: 14px;
 }
 
-code{
+:not(pre) > code{
   background: var(--code-bg);
   padding: 2px 6px;
   border-radius: 8px;
 }
 
-pre{
+/* ===== Rouge container margin (code blocks spacing) ===== */
+.highlighter-rouge{
+  margin: 24px 0;
+}
+
+/* ===== Rouge outer box ===== */
+.highlighter-rouge > .highlight{
+  position: relative;
   background: var(--code-bg);
-  padding: 16px;
   border-radius: 12px;
+
+  /* top padding for label/toolbar */
+  padding: 34px 12px 14px 12px;
+
   overflow-x: auto;
-  margin: 18px 0;
+  -webkit-overflow-scrolling: touch;
 }
 
-pre code{
-  background: transparent;
-  padding: 0;
+/* Rouge 내부에서 pre/code 기본 스타일을 완전히 리셋 (중복 padding/margin 방지) */
+.highlighter-rouge pre,
+.highlighter-rouge code{
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  line-height: 1.5;
 }
 
-/* ===== MathJax spacing ===== */
-.MathJax, mjx-container{
-  font-size: 1.06em;
-}
-mjx-container[display="true"]{
-  margin: 18px 0 !important;
-}
-
-/* =========================================================
-   Rouge highlight
-   ========================================================= */
-
+/* (안전) theme에서 pseudo 라벨 만들면 제거 */
 .highlighter-rouge pre::before,
 .highlighter-rouge code::before{
   content: none !important;
   display: none !important;
 }
 
-/* ✅ 코드블럭끼리 margin (붙어 보이는 문제 해결) */
-.highlighter-rouge{
-  margin: 24px 0;
-}
-
-.highlight{
-  position: relative;
-  background: #f6f8fa;
-  border-radius: 12px;
-  padding: 34px 12px 14px 12px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Rouge 내부 pre reset */
-.highlighter-rouge pre{
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
-}
-
-/* ===== Syntax colors ===== */
-.highlight .c { color: #6a737d; }
-.highlight .k { color: #d73a49; }
-.highlight .o { color: #d73a49; }
-.highlight .s { color: #032f62; }
-.highlight .mi { color: #005cc5; }
-.highlight .nf { color: #6f42c1; }
-.highlight .nb { color: #005cc5; }
-.highlight .n  { color: #24292e; }
-
-/* ===== Language label ===== */
-.highlight::before{
+/* ===== Language label (left) ===== */
+.highlighter-rouge > .highlight::before{
   position: absolute;
   top: 8px;
   left: 12px;
 
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.4;
   color: #6b7280;
 
   background: #f3f4f6;
@@ -160,20 +138,16 @@ mjx-container[display="true"]{
   border-radius: 6px;
 
   padding: 2px 8px;
-  line-height: 1.4;
-
-  display: none;
   content: "";
+  display: none;
 }
 
-.language-python .highlight::before{ content:"python"; display:inline-block; }
-.language-javascript .highlight::before{ content:"javascript"; display:inline-block; }
-.language-bash .highlight::before{ content:"bash"; display:inline-block; }
+/* language class is on the outer div: <div class="language-python highlighter-rouge"> */
+.language-python.highlighter-rouge > .highlight::before{ content:"python"; display:inline-block; }
+.language-javascript.highlighter-rouge > .highlight::before{ content:"javascript"; display:inline-block; }
+.language-bash.highlighter-rouge > .highlight::before{ content:"bash"; display:inline-block; }
 
-/* =========================================================
-   Rouge line numbers
-   ========================================================= */
-
+/* ===== Rouge line numbers table ===== */
 .highlighter-rouge .rouge-table{
   width: 100%;
   border-collapse: collapse;
@@ -185,7 +159,6 @@ mjx-container[display="true"]{
   vertical-align: top;
 }
 
-/* line numbers */
 .highlighter-rouge td.rouge-gutter{
   user-select: none;
   color: #9ca3af;
@@ -196,48 +169,21 @@ mjx-container[display="true"]{
   width: 1%;
 }
 
-.highlighter-rouge td.rouge-gutter pre{
-  margin: 0;
-}
+.highlighter-rouge td.rouge-gutter pre{ margin: 0 !important; }
+.highlighter-rouge td.rouge-code pre{ margin: 0 !important; }
 
-/* code area */
-.highlighter-rouge td.rouge-code{
-  width: 100%;
-}
-
-.highlighter-rouge td.rouge-code pre{
-  margin: 0;
-}
-
-/* =========================================================
-   Code UX improvements
-   ========================================================= */
-
-.highlighter-rouge pre,
-.highlighter-rouge code{
-  line-height: 1.5;
-}
-
+/* ===== Selection highlight ===== */
 .highlighter-rouge ::selection{
   background: #cce2ff;
 }
 
-@media (max-width: 600px){
-  pre,code{
-    font-size: 13px;
-  }
-}
-
-/* =========================================================
-   Expand / Collapse (CSS part)
-   ========================================================= */
-
-.highlighter-rouge .highlight.is-collapsed{
+/* ===== Collapse (CSS part) ===== */
+.highlighter-rouge > .highlight.is-collapsed{
   max-height: 220px;
   overflow: hidden;
 }
 
-.highlighter-rouge .highlight.is-collapsed::after{
+.highlighter-rouge > .highlight.is-collapsed::after{
   content: "";
   position: absolute;
   left: 0;
@@ -251,70 +197,8 @@ mjx-container[display="true"]{
 }
 
 /* =========================================================
-   Buttons: Copy / Expand  ✅중복 정의 제거 + 겹침 방지
+   Toolbar (right): Expand + Copy (horizontal)
    ========================================================= */
-
-/* 공통 버튼 스타일 */
-.code-copy-btn,
-.code-toggle-btn{
-  position: absolute;
-  right: 10px;
-  z-index: 10;
-
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.4;
-
-  padding: 4px 10px;
-  background: #ffffff;
-  color: #24292f;
-
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.code-copy-btn:hover,
-.code-toggle-btn:hover{
-  background: #f6f8fa;
-}
-
-/* Expand는 위 */
-.code-toggle-btn{
-  top: 8px;
-}
-
-/* Copy는 아래 (겹침 방지) */
-.code-copy-btn{
-  top: 44px;
-}
-
-/* 짧은 코드에는 Expand 숨김 */
-.highlighter-rouge .highlight.is-short .code-toggle-btn{
-  display: none;
-}
-
-/* Copied 상태 */
-.code-copy-btn.copied{
-  background:#e6ffec;
-  border-color:#2da44e;
-}
-
-/* ✅ Copy 버튼을 hover에서만 보이게 하고 싶으면 아래 2줄만 켜면 됨 */
-/*
-.code-copy-btn{ opacity:0; transition:opacity .15s; }
-.highlight:hover .code-copy-btn{ opacity:1; }
-*/
-
-/* ==============================
-   Code toolbar: Expand + Copy (horizontal)
-   ============================== */
-
-.highlighter-rouge .highlight{
-  position: relative; /* toolbar absolute 기준 */
-}
-
-/* 오른쪽 상단 툴바 */
 .code-toolbar{
   position: absolute;
   top: 8px;
@@ -327,13 +211,7 @@ mjx-container[display="true"]{
   align-items: center;
 }
 
-/* 버튼 공통 스타일 */
-.code-toolbar .code-toggle-btn,
-.code-toolbar .code-copy-btn{
-  position: static;     /* ✅ absolute 해제: 가로 정렬 핵심 */
-  top: auto;
-  right: auto;
-
+.code-toolbar button{
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
@@ -347,8 +225,7 @@ mjx-container[display="true"]{
   cursor: pointer;
 }
 
-.code-toolbar .code-toggle-btn:hover,
-.code-toolbar .code-copy-btn:hover{
+.code-toolbar button:hover{
   background: #f6f8fa;
 }
 
@@ -356,3 +233,23 @@ mjx-container[display="true"]{
   background:#e6ffec;
   border-color:#2da44e;
 }
+
+/* short code: hide expand only */
+.highlighter-rouge > .highlight.is-short .code-toggle-btn{
+  display: none;
+}
+
+/* ===== Mobile font ===== */
+@media (max-width: 600px){
+  pre, code{ font-size: 13px; }
+}
+
+/* ===== Syntax colors (keep yours) ===== */
+.highlight .c { color: #6a737d; }
+.highlight .k { color: #d73a49; }
+.highlight .o { color: #d73a49; }
+.highlight .s { color: #032f62; }
+.highlight .mi { color: #005cc5; }
+.highlight .nf { color: #6f42c1; }
+.highlight .nb { color: #005cc5; }
+.highlight .n  { color: #24292e; }
