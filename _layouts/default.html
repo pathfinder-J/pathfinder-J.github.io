@@ -45,81 +45,89 @@
 
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const COLLAPSED_HEIGHT = 220;
+  const COLLAPSED_HEIGHT = 220;
 
-    document.querySelectorAll(".highlighter-rouge > .highlight").forEach(function (block) {
+  document.querySelectorAll(".highlighter-rouge > .highlight").forEach(function (block) {
 
-      // toolbar
-      let toolbar = block.querySelector(".code-toolbar");
-      if (!toolbar) {
-        toolbar = document.createElement("div");
-        toolbar.className = "code-toolbar";
-        block.appendChild(toolbar);
+    /* 1) highlight를 shell로 감싼다 */
+    let shell = block.parentElement;
+    if (!shell.classList.contains("code-block-shell")) {
+      shell = document.createElement("div");
+      shell.className = "code-block-shell";
+      block.parentNode.insertBefore(shell, block);
+      shell.appendChild(block);
+    }
+
+    /* 2) toolbar 생성 */
+    let toolbar = shell.querySelector(".code-toolbar");
+    if (!toolbar) {
+      toolbar = document.createElement("div");
+      toolbar.className = "code-toolbar";
+      shell.appendChild(toolbar);
+    }
+
+    /* 3) Copy 버튼 */
+    let copyBtn = toolbar.querySelector(".code-copy-btn");
+    if (!copyBtn) {
+      copyBtn = document.createElement("button");
+      copyBtn.className = "code-copy-btn";
+      copyBtn.type = "button";
+      copyBtn.textContent = "Copy";
+
+      copyBtn.addEventListener("click", function () {
+        const code = block.querySelector(".rouge-code pre");
+        if (!code) return;
+
+        navigator.clipboard.writeText(code.innerText).then(() => {
+          copyBtn.textContent = "Copied";
+          copyBtn.classList.add("copied");
+          setTimeout(() => {
+            copyBtn.textContent = "Copy";
+            copyBtn.classList.remove("copied");
+          }, 1200);
+        });
+      });
+
+      toolbar.appendChild(copyBtn);
+    }
+
+    /* 4) Expand 버튼 */
+    requestAnimationFrame(() => {
+      const contentHeight = block.scrollHeight;
+      let toggleBtn = toolbar.querySelector(".code-toggle-btn");
+
+      if (contentHeight <= COLLAPSED_HEIGHT + 20) {
+        shell.classList.add("is-short");
+        block.classList.remove("is-collapsed");
+        if (toggleBtn) toggleBtn.remove();
+        return;
       }
 
-      // Copy (always)
-      let copyBtn = toolbar.querySelector(".code-copy-btn");
-      if (!copyBtn) {
-        copyBtn = document.createElement("button");
-        copyBtn.className = "code-copy-btn";
-        copyBtn.type = "button";
-        copyBtn.textContent = "Copy";
+      shell.classList.remove("is-short");
+      block.classList.add("is-collapsed");
 
-        copyBtn.addEventListener("click", function () {
-          const code = block.querySelector(".rouge-code pre");
-          if (!code) return;
+      if (!toggleBtn) {
+        toggleBtn = document.createElement("button");
+        toggleBtn.className = "code-toggle-btn";
+        toggleBtn.type = "button";
+        toggleBtn.textContent = "Expand";
 
-          navigator.clipboard.writeText(code.innerText).then(() => {
-            copyBtn.textContent = "Copied";
-            copyBtn.classList.add("copied");
-            setTimeout(() => {
-              copyBtn.textContent = "Copy";
-              copyBtn.classList.remove("copied");
-            }, 1200);
-          });
+        toggleBtn.addEventListener("click", function () {
+          const collapsed = block.classList.contains("is-collapsed");
+          if (collapsed) {
+            block.classList.remove("is-collapsed");
+            toggleBtn.textContent = "Collapse";
+          } else {
+            block.classList.add("is-collapsed");
+            toggleBtn.textContent = "Expand";
+          }
         });
 
-        toolbar.appendChild(copyBtn);
+        toolbar.insertBefore(toggleBtn, copyBtn);
       }
-
-      // Expand (only if long)
-      requestAnimationFrame(() => {
-        const contentHeight = block.scrollHeight;
-        let toggleBtn = toolbar.querySelector(".code-toggle-btn");
-
-        if (contentHeight <= COLLAPSED_HEIGHT + 20) {
-          block.classList.add("is-short");
-          block.classList.remove("is-collapsed");
-          if (toggleBtn) toggleBtn.remove();
-          return;
-        }
-
-        block.classList.remove("is-short");
-        block.classList.add("is-collapsed");
-
-        if (!toggleBtn) {
-          toggleBtn = document.createElement("button");
-          toggleBtn.className = "code-toggle-btn";
-          toggleBtn.type = "button";
-          toggleBtn.textContent = "Expand";
-
-          toggleBtn.addEventListener("click", function () {
-            const collapsed = block.classList.contains("is-collapsed");
-            if (collapsed) {
-              block.classList.remove("is-collapsed");
-              toggleBtn.textContent = "Collapse";
-            } else {
-              block.classList.add("is-collapsed");
-              toggleBtn.textContent = "Expand";
-            }
-          });
-
-          // Expand left, Copy right
-          toolbar.insertBefore(toggleBtn, copyBtn);
-        }
-      });
     });
   });
-  </script>
+});
+</script>
 </body>
 </html>
