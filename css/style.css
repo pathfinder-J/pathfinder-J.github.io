@@ -9,6 +9,7 @@
 }
 
 html{ background: var(--bg); }
+
 body{
   margin: 0;
   color: var(--text);
@@ -30,12 +31,16 @@ body{
   border-bottom: 1px solid var(--border);
   padding: 14px 18px;
 }
+
 .site-title a{
   color: var(--text);
   text-decoration: none;
   font-weight: 700;
 }
-.site-title a:hover{ text-decoration: underline; }
+
+.site-title a:hover{
+  text-decoration: underline;
+}
 
 .site-footer{
   border-top: 1px solid var(--border);
@@ -50,6 +55,7 @@ body{
   font-size: 32px;
   line-height: 1.2;
 }
+
 .post-meta{
   color: var(--muted);
   margin-bottom: 22px;
@@ -61,7 +67,10 @@ body{
 .post-content h3{ margin-top: 26px; font-size: 20px; }
 
 a{ color: var(--link); }
-a:hover{ text-decoration: underline; }
+
+a:hover{
+  text-decoration: underline;
+}
 
 /* ===== Images ===== */
 .post-content img{
@@ -72,23 +81,25 @@ a:hover{ text-decoration: underline; }
 }
 
 /* =========================================================
-   Inline code + Rouge code blocks (Clean rebuild)
+   Inline code + Rouge code blocks
    ========================================================= */
 
-/* ===== Inline code ===== */
-pre, code{
+pre,
+code{
   font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   font-size: 14px;
 }
 
+/* inline code only */
 :not(pre) > code{
   background: var(--code-bg);
   padding: 2px 6px;
   border-radius: 8px;
 }
 
-/* ===== Rouge container margin (code blocks spacing) ===== */
-.highlighter-rouge{
+/* ===== code block wrapper (toolbar fixed area) ===== */
+.code-block-shell{
+  position: relative;
   margin: 24px 0;
 }
 
@@ -98,14 +109,15 @@ pre, code{
   background: var(--code-bg);
   border-radius: 12px;
 
-  /* top padding for label/toolbar */
+  /* top padding for language label + toolbar */
   padding: 34px 12px 14px 12px;
 
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Rouge 내부에서 pre/code 기본 스타일을 완전히 리셋 (중복 padding/margin 방지) */
+/* reset Rouge inner pre/code */
 .highlighter-rouge pre,
 .highlighter-rouge code{
   margin: 0 !important;
@@ -115,7 +127,7 @@ pre, code{
   line-height: 1.5;
 }
 
-/* (안전) theme에서 pseudo 라벨 만들면 제거 */
+/* remove theme pseudo labels if any */
 .highlighter-rouge pre::before,
 .highlighter-rouge code::before{
   content: none !important;
@@ -136,18 +148,28 @@ pre, code{
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
-
   padding: 2px 8px;
+
   content: "";
   display: none;
 }
 
-/* language class is on the outer div: <div class="language-python highlighter-rouge"> */
-.language-python.highlighter-rouge > .highlight::before{ content:"python"; display:inline-block; }
-.language-javascript.highlighter-rouge > .highlight::before{ content:"javascript"; display:inline-block; }
-.language-bash.highlighter-rouge > .highlight::before{ content:"bash"; display:inline-block; }
+.language-python.highlighter-rouge > .highlight::before{
+  content: "python";
+  display: inline-block;
+}
 
-/* ===== Rouge line numbers table ===== */
+.language-javascript.highlighter-rouge > .highlight::before{
+  content: "javascript";
+  display: inline-block;
+}
+
+.language-bash.highlighter-rouge > .highlight::before{
+  content: "bash";
+  display: inline-block;
+}
+
+/* ===== Rouge table / line numbers ===== */
 .highlighter-rouge .rouge-table{
   width: 100%;
   border-collapse: collapse;
@@ -164,20 +186,21 @@ pre, code{
   color: #9ca3af;
   white-space: pre;
   text-align: right;
-
   padding-right: 12px;
   width: 1%;
 }
 
-.highlighter-rouge td.rouge-gutter pre{ margin: 0 !important; }
-.highlighter-rouge td.rouge-code pre{ margin: 0 !important; }
+.highlighter-rouge td.rouge-gutter pre,
+.highlighter-rouge td.rouge-code pre{
+  margin: 0 !important;
+}
 
-/* ===== Selection highlight ===== */
+/* ===== selection ===== */
 .highlighter-rouge ::selection{
   background: #cce2ff;
 }
 
-/* ===== Collapse (CSS part) ===== */
+/* ===== collapse ===== */
 .highlighter-rouge > .highlight.is-collapsed{
   max-height: 220px;
   overflow: hidden;
@@ -197,10 +220,10 @@ pre, code{
 }
 
 /* =========================================================
-   Toolbar (right): Expand + Copy (horizontal, sticky)
+   Toolbar (fixed to shell, not scrolling with code)
    ========================================================= */
 .code-toolbar{
-  position: sticky;
+  position: absolute;
   top: 8px;
   right: 10px;
   z-index: 30;
@@ -209,26 +232,19 @@ pre, code{
   flex-direction: row;
   gap: 8px;
   align-items: center;
-  justify-content: flex-end;
-
-  margin-left: auto;
-  width: fit-content;
 }
 
-/* 버튼 공통 */
 .code-toolbar button{
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
-
   padding: 4px 10px;
+
   background: #ffffff;
   color: #24292f;
-
   border: 1px solid #d0d7de;
   border-radius: 8px;
   cursor: pointer;
-
   white-space: nowrap;
 }
 
@@ -236,22 +252,41 @@ pre, code{
   background: #f6f8fa;
 }
 
-.code-toolbar .code-copy-btn.copied{
+.code-copy-btn.copied{
   background: #e6ffec;
   border-color: #2da44e;
 }
 
-/* 짧은 코드면 Expand만 숨김 */
-.highlighter-rouge > .highlight.is-short .code-toggle-btn{
+/* short code: hide expand only */
+.code-block-shell.is-short .code-toggle-btn{
   display: none;
 }
 
-/* ===== Syntax colors (keep yours) ===== */
-.highlight .c { color: #6a737d; }
-.highlight .k { color: #d73a49; }
-.highlight .o { color: #d73a49; }
-.highlight .s { color: #032f62; }
-.highlight .mi { color: #005cc5; }
-.highlight .nf { color: #6f42c1; }
-.highlight .nb { color: #005cc5; }
-.highlight .n  { color: #24292e; }
+/* ===== Mobile ===== */
+@media (max-width: 600px){
+  pre,
+  code{
+    font-size: 13px;
+  }
+
+  .code-toolbar{
+    gap: 6px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .code-toolbar button{
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+/* ===== Syntax colors ===== */
+.highlight .c { color: #6a737d; } /* Comment */
+.highlight .k { color: #d73a49; } /* Keyword */
+.highlight .o { color: #d73a49; } /* Operator */
+.highlight .s { color: #032f62; } /* String */
+.highlight .mi { color: #005cc5; } /* Number */
+.highlight .nf { color: #6f42c1; } /* Function name */
+.highlight .nb { color: #005cc5; } /* Builtins */
+.highlight .n  { color: #24292e; } /* Name */
