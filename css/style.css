@@ -305,3 +305,54 @@ mjx-container[display="true"]{
 .code-copy-btn{ opacity:0; transition:opacity .15s; }
 .highlight:hover .code-copy-btn{ opacity:1; }
 */
+
+/* ==============================
+   Code toolbar: Expand + Copy (horizontal)
+   ============================== */
+
+.highlighter-rouge .highlight{
+  position: relative; /* toolbar absolute 기준 */
+}
+
+/* 오른쪽 상단 툴바 */
+.code-toolbar{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+/* 버튼 공통 스타일 */
+.code-toolbar .code-toggle-btn,
+.code-toolbar .code-copy-btn{
+  position: static;     /* ✅ absolute 해제: 가로 정렬 핵심 */
+  top: auto;
+  right: auto;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  padding: 4px 10px;
+  background: #ffffff;
+  color: #24292f;
+
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.code-toolbar .code-toggle-btn:hover,
+.code-toolbar .code-copy-btn:hover{
+  background: #f6f8fa;
+}
+
+.code-toolbar .code-copy-btn.copied{
+  background:#e6ffec;
+  border-color:#2da44e;
+}
