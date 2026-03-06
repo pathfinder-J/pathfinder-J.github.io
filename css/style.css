@@ -197,20 +197,25 @@ pre, code{
 }
 
 /* =========================================================
-   Toolbar (right): Expand + Copy (horizontal)
+   Toolbar (right): Expand + Copy (horizontal, sticky)
    ========================================================= */
 .code-toolbar{
-  position: absolute;
+  position: sticky;
   top: 8px;
   right: 10px;
-  z-index: 20;
+  z-index: 30;
 
   display: flex;
   flex-direction: row;
   gap: 8px;
   align-items: center;
+  justify-content: flex-end;
+
+  margin-left: auto;
+  width: fit-content;
 }
 
+/* 버튼 공통 */
 .code-toolbar button{
   font-size: 12px;
   font-weight: 500;
@@ -223,6 +228,8 @@ pre, code{
   border: 1px solid #d0d7de;
   border-radius: 8px;
   cursor: pointer;
+
+  white-space: nowrap;
 }
 
 .code-toolbar button:hover{
@@ -230,18 +237,13 @@ pre, code{
 }
 
 .code-toolbar .code-copy-btn.copied{
-  background:#e6ffec;
-  border-color:#2da44e;
+  background: #e6ffec;
+  border-color: #2da44e;
 }
 
-/* short code: hide expand only */
+/* 짧은 코드면 Expand만 숨김 */
 .highlighter-rouge > .highlight.is-short .code-toggle-btn{
   display: none;
-}
-
-/* ===== Mobile font ===== */
-@media (max-width: 600px){
-  pre, code{ font-size: 13px; }
 }
 
 /* ===== Syntax colors (keep yours) ===== */
