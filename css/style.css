@@ -219,7 +219,7 @@ code{
 
 /* collapse */
 .highlighter-rouge .highlight.is-collapsed .code-viewport{
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .highlighter-rouge .highlight.is-collapsed .code-viewport::after{
