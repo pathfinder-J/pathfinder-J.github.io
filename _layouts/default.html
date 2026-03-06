@@ -212,23 +212,25 @@
         var table = wrapper.querySelector(".rouge-table");
         var codeCell = wrapper.querySelector(".rouge-code");
 
+        viewport.style.width = "100%";
+        viewport.style.minWidth = "0";
+
         if (pre) {
           pre.style.whiteSpace = "pre";
-          pre.style.width = "max-content";
+          pre.style.display = "inline-block";
           pre.style.minWidth = "100%";
+          pre.style.width = "";
         }
 
         if (table) {
-          table.style.width = "max-content";
+          table.style.display = "inline-table";
           table.style.minWidth = "100%";
+          table.style.width = "";
         }
 
         if (codeCell) {
           codeCell.style.whiteSpace = "pre";
         }
-
-        viewport.style.width = "max-content";
-        viewport.style.minWidth = "100%";
       }
 
       function setupBlock(wrapper) {
