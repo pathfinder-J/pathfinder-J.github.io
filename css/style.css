@@ -1,59 +1,59 @@
 /* ===== Base ===== */
 :root{
-  --text: #111;
-  --muted: #666;
-  --bg: #fff;
-  --link: #0b57d0;
-  --code-bg: #f6f8fa;
-  --border: #e6e6e6;
+--text: #111;
+--muted: #666;
+--bg: #fff;
+--link: #0b57d0;
+--code-bg: #f6f8fa;
+--border: #e6e6e6;
 }
 
 html{ background: var(--bg); }
 body{
-  margin: 0;
-  color: var(--text);
-  font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
-  font-size: 16px;
-  line-height: 1.75;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+margin: 0;
+color: var(--text);
+font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
+font-size: 16px;
+line-height: 1.75;
+-webkit-font-smoothing: antialiased;
+text-rendering: optimizeLegibility;
 }
 
 .container{
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 36px 18px 60px;
+max-width: 860px;
+margin: 0 auto;
+padding: 36px 18px 60px;
 }
 
 /* ===== Header / Footer ===== */
 .site-header{
-  border-bottom: 1px solid var(--border);
-  padding: 14px 18px;
+border-bottom: 1px solid var(--border);
+padding: 14px 18px;
 }
 .site-title a{
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 700;
+color: var(--text);
+text-decoration: none;
+font-weight: 700;
 }
 .site-title a:hover{ text-decoration: underline; }
 
 .site-footer{
-  border-top: 1px solid var(--border);
-  padding: 18px;
-  color: var(--muted);
-  text-align: center;
+border-top: 1px solid var(--border);
+padding: 18px;
+color: var(--muted);
+text-align: center;
 }
 
 /* ===== Typography ===== */
 .post-title{
-  margin: 18px 0 8px;
-  font-size: 32px;
-  line-height: 1.2;
+margin: 18px 0 8px;
+font-size: 32px;
+line-height: 1.2;
 }
 .post-meta{
-  color: var(--muted);
-  margin-bottom: 22px;
-  font-size: 14px;
+color: var(--muted);
+margin-bottom: 22px;
+font-size: 14px;
 }
 
 .post-content p{ margin: 14px 0; }
@@ -65,183 +65,202 @@ a:hover{ text-decoration: underline; }
 
 /* ===== Images ===== */
 .post-content img{
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 18px auto;
+max-width: 100%;
+height: auto;
+display: block;
+margin: 18px auto;
 }
 
-/* ===== Inline code & Code blocks (GLOBAL) ===== */
+/* ===== Inline code & Code blocks ===== */
 pre, code{
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 14px;
+font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+font-size: 14px;
 }
 
-/* inline code */
 code{
-  background: var(--code-bg);
-  padding: 2px 6px;
-  border-radius: 8px;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 8px;
 }
 
-/* 일반 pre (Rouge 블록은 아래에서 따로 완전 리셋함) */
 pre{
-  background: var(--code-bg);
-  padding: 16px;
-  border-radius: 12px;
-  overflow-x: auto;
-  margin: 18px 0;
+background: var(--code-bg);
+padding: 16px;
+border-radius: 12px;
+overflow-x: auto;
+margin: 18px 0;
 }
 
 pre code{
-  background: transparent;
-  padding: 0;
+background: transparent;
+padding: 0;
 }
 
 /* ===== MathJax spacing ===== */
 .MathJax, mjx-container{
-  font-size: 1.06em;
+font-size: 1.06em;
 }
 mjx-container[display="true"]{
-  margin: 18px 0 !important;
+margin: 18px 0 !important;
 }
 
 /* =========================================================
-   Rouge (Jekyll/Rouge) code blocks + line numbers  ✅FIXED
-   실제 HTML(확정):
-   <div class="language-python highlighter-rouge">
-     <div class="highlight">
-       <pre class="highlight"><code>
-         <table class="rouge-table">
-           <td class="rouge-gutter"><pre class="lineno">...</pre></td>
-           <td class="rouge-code"><pre>...</pre></td>
-         </table>
-       </code></pre>
-     </div>
-   </div>
-   ========================================================= */
+Rouge highlight
+========================================================= */
 
-/* 0) 기존/테마에서 만드는 pseudo 라벨 강제 OFF */
 .highlighter-rouge pre::before,
-.highlighter-rouge code::before,
-.highlighter-rouge pre.highlight::before,
-pre::before,
-pre.highlight::before,
-code::before{
-  content: none !important;
-  display: none !important;
+.highlighter-rouge code::before{
+content: none !important;
+display: none !important;
 }
 
-/* 1) Rouge 영역에서는 전역 pre/code 스타일(특히 pre padding 16px, code 배경/패딩)을 완전히 제거 */
-.highlighter-rouge pre,
-.highlighter-rouge code{
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
+.highlight{
+position: relative;
+background: #f6f8fa;
+border-radius: 12px;
+padding: 34px 12px 14px 12px;
+overflow-x: auto;
 }
 
-/* inline code 스타일이 코드블록 내부로 들어오는 것 차단 */
-.highlighter-rouge code{
-  background: transparent !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  display: block; /* <code> 안에 table이 들어가 있으므로 block으로 */
+/* Rouge 내부 pre reset */
+.highlighter-rouge pre{
+padding: 0 !important;
+margin: 0 !important;
+background: transparent !important;
 }
 
-/* 2) 코드블록 “박스”는 .highlight 한 군데에서만 padding을 준다 (중첩 방지) */
-.highlighter-rouge .highlight{
-  position: relative;
-  background: #f6f8fa;
-  border-radius: 12px;
-  margin: 18px 0;
+/* ===== Syntax colors ===== */
+.highlight .c { color: #6a737d; }
+.highlight .k { color: #d73a49; }
+.highlight .o { color: #d73a49; }
+.highlight .s { color: #032f62; }
+.highlight .mi { color: #005cc5; }
+.highlight .nf { color: #6f42c1; }
+.highlight .nb { color: #005cc5; }
+.highlight .n  { color: #24292e; }
 
-  /* 라벨 공간 + 좌우 여백 */
-  padding: 34px 12px 14px 12px;
+/* ===== Language label ===== */
 
-  overflow-x: auto;
+.highlight::before{
+position: absolute;
+top: 8px;
+left: 12px;
+
+font-size: 12px;
+font-weight: 600;
+color: #6b7280;
+
+background: #f3f4f6;
+border: 1px solid #e5e7eb;
+border-radius: 6px;
+
+padding: 2px 8px;
+line-height: 1.4;
+
+display: none;
+content: "";
 }
 
-/* 3) pre.highlight는 그릇 역할만(안전하게 다시 0) */
-.highlighter-rouge .highlight > pre.highlight{
-  padding: 0 !important;
-  margin: 0 !important;
-}
+.language-python .highlight::before{ content:"python"; display:inline-block; }
+.language-javascript .highlight::before{ content:"javascript"; display:inline-block; }
+.language-bash .highlight::before{ content:"bash"; display:inline-block; }
 
-/* 4) 라벨: language-xxx가 바깥 div에 있으니 이렇게 써야 100% 먹음 */
-.highlighter-rouge .highlight::before{
-  content: "";
-  display: none;
+/* =========================================================
+Rouge line numbers
+========================================================= */
 
-  position: absolute;
-  top: 8px;
-  left: 12px;
-
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: #6b7280;
-
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-
-  padding: 2px 8px;
-}
-
-.language-python.highlighter-rouge .highlight::before{ content:"python"; display:inline-block; }
-.language-javascript.highlighter-rouge .highlight::before{ content:"javascript"; display:inline-block; }
-.language-bash.highlighter-rouge .highlight::before{ content:"bash"; display:inline-block; }
-
-/* 5) Rouge table 레이아웃 */
 .highlighter-rouge .rouge-table{
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: auto;   /* 100%로 하면 어떤 테마에서 불필요한 여백이 생기는 경우가 있어서 auto 권장 */
-  margin: 0;
+width: 100%;
+border-collapse: collapse;
+border-spacing: 0;
 }
 
 .highlighter-rouge .rouge-table td{
-  padding: 0;
-  vertical-align: top;
+padding: 0;
+vertical-align: top;
 }
 
-/* 6) 줄번호 칸(여기가 spacing의 핵심) */
+/* line numbers */
 .highlighter-rouge td.rouge-gutter{
-  user-select: none;
-  color: #9ca3af;
-  white-space: pre;
-  text-align: right;      /* 숫자는 보통 오른쪽 정렬이 자연스러움 */
+user-select: none;
+color: #9ca3af;
+white-space: pre;
+text-align: right;
 
-  /* ✅ 여기 두 값만으로 “코드가 얼마나 밀리는지”가 결정됨 */
-  padding-right: 6px;    /* 숫자와 코드 사이 간격 */
-  min-width: 1.2em;       /* 줄번호 칸 폭(너무 크면 코드가 과하게 오른쪽으로 감) */
+padding-right: 6px;
+width: 1%;
 }
 
-/* 줄번호 자체 pre */
-.highlighter-rouge td.rouge-gutter pre.lineno{
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
+.highlighter-rouge td.rouge-gutter pre{
+margin: 0;
 }
 
-/* 7) 코드 칸: 불필요한 들여쓰기 제거 */
+/* code area */
 .highlighter-rouge td.rouge-code{
-  padding-left: 0 !important;
+width: 100%;
 }
 
 .highlighter-rouge td.rouge-code pre{
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
+margin: 0;
 }
 
-/* 8) 토큰 색상(네가 쓰던 그대로) */
-.highlight .c { color: #6a737d; } /* Comment */
-.highlight .k { color: #d73a49; } /* Keyword */
-.highlight .o { color: #d73a49; } /* Operator */
-.highlight .s { color: #032f62; } /* String */
-.highlight .mi { color: #005cc5; } /* Number */
-.highlight .nf { color: #6f42c1; } /* Function name */
-.highlight .nb { color: #005cc5; } /* Builtins */
-.highlight .n  { color: #24292e; } /* Name */
+/* =========================================================
+Code UX improvements
+========================================================= */
+
+/* line-height 안정화 */
+.highlighter-rouge pre,
+.highlighter-rouge code{
+line-height: 1.5;
+}
+
+/* 코드 드래그 색상 */
+.highlighter-rouge ::selection{
+background: #cce2ff;
+}
+
+/* 가로 스크롤 부드럽게 */
+.highlight{
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+}
+
+/* 모바일 코드 크기 */
+@media (max-width: 600px){
+pre,code{
+font-size: 13px;
+}
+}
+
+/* copy button */
+
+.code-copy-btn{
+  position:absolute;
+  top:8px;
+  right:10px;
+
+  font-size:12px;
+  font-weight:500;
+
+  padding:4px 8px;
+
+  background:#ffffff;
+  border:1px solid #d0d7de;
+  border-radius:6px;
+
+  cursor:pointer;
+
+  opacity:0;
+  transition:opacity .15s;
+}
+
+/* hover 시 버튼 표시 */
+.highlight:hover .code-copy-btn{
+  opacity:1;
+}
+
+/* 클릭 후 상태 */
+.code-copy-btn.copied{
+  background:#e6ffec;
+  border-color:#2da44e;
+}
