@@ -81,7 +81,7 @@ a:hover{
 }
 
 /* =========================================================
-   Inline code + Rouge code blocks
+   Inline code + code blocks
    ========================================================= */
 
 pre,
@@ -90,42 +90,47 @@ code{
   font-size: 14px;
 }
 
-/* inline code only */
 :not(pre) > code{
   background: var(--code-bg);
   padding: 2px 6px;
   border-radius: 8px;
 }
 
-/* ===== code block wrapper ===== */
+/* ===== block shell ===== */
 .code-block-shell{
   position: relative;
   margin: 24px 0;
 }
 
-/* ===== Rouge outer box ===== */
-.highlighter-rouge > .highlight{
+/* wrapper itself */
+.highlighter-rouge{
   position: relative;
-  background: var(--code-bg);
+  margin: 0;
+}
+
+/* actual code box */
+.highlighter-rouge .highlight{
+  position: relative;
+  background: #f6f8fa !important;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 44px 12px 14px 12px;
   overflow: hidden;
 }
 
-/* actual horizontal scroll area */
+/* scroll area */
 .code-scroll{
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-/* inner visible area for collapse */
+/* visible clipped area */
 .code-viewport{
   position: relative;
 }
 
-/* reset Rouge inner pre/code */
+/* reset */
 .highlighter-rouge pre,
 .highlighter-rouge code{
   margin: 0 !important;
@@ -135,33 +140,7 @@ code{
   line-height: 1.5;
 }
 
-/* remove theme pseudo labels if any */
-.highlighter-rouge pre::before,
-.highlighter-rouge code::before{
-  content: none !important;
-  display: none !important;
-}
-
-/* ===== Language label (left) ===== */
-.code-lang{
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  z-index: 20;
-
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: #6b7280;
-
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  padding: 2px 8px;
-  white-space: nowrap;
-}
-
-/* ===== Rouge table / line numbers ===== */
+/* line-number table */
 .highlighter-rouge .rouge-table{
   width: max-content;
   min-width: 100%;
@@ -188,22 +167,35 @@ code{
   margin: 0 !important;
 }
 
-/* make plain pre also scroll nicely if Rouge table is absent */
 .highlighter-rouge .highlight > pre{
   min-width: max-content;
 }
 
-/* ===== selection ===== */
-.highlighter-rouge ::selection{
-  background: #cce2ff;
+/* language badge */
+.code-lang{
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 20;
+  display: inline-block;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #6b7280;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 2px 8px;
+  white-space: nowrap;
 }
 
-/* ===== collapse ===== */
-.highlighter-rouge > .highlight.is-collapsed .code-viewport{
+/* collapse */
+.highlighter-rouge .highlight.is-collapsed .code-viewport{
   overflow: hidden;
 }
 
-.highlighter-rouge > .highlight.is-collapsed .code-viewport::after{
+.highlighter-rouge .highlight.is-collapsed .code-viewport::after{
   content: "";
   position: absolute;
   left: 0;
@@ -216,15 +208,12 @@ code{
   border-bottom-right-radius: 12px;
 }
 
-/* =========================================================
-   Toolbar (fixed to shell, not scrolling with code)
-   ========================================================= */
+/* toolbar */
 .code-toolbar{
   position: absolute;
   top: 8px;
   right: 10px;
   z-index: 30;
-
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -236,8 +225,7 @@ code{
   font-weight: 500;
   line-height: 1.4;
   padding: 4px 10px;
-
-  background: #ffffff;
+  background: #fff;
   color: #24292f;
   border: 1px solid #d0d7de;
   border-radius: 8px;
@@ -254,12 +242,10 @@ code{
   border-color: #2da44e;
 }
 
-/* short code: hide expand only */
 .code-block-shell.is-short .code-toggle-btn{
   display: none;
 }
 
-/* ===== Mobile ===== */
 @media (max-width: 600px){
   pre,
   code{
@@ -279,11 +265,11 @@ code{
 }
 
 /* ===== Syntax colors ===== */
-.highlight .c { color: #6a737d; } /* Comment */
-.highlight .k { color: #d73a49; } /* Keyword */
-.highlight .o { color: #d73a49; } /* Operator */
-.highlight .s { color: #032f62; } /* String */
-.highlight .mi { color: #005cc5; } /* Number */
-.highlight .nf { color: #6f42c1; } /* Function name */
-.highlight .nb { color: #005cc5; } /* Builtins */
-.highlight .n  { color: #24292e; } /* Name */
+.highlight .c { color: #6a737d; }
+.highlight .k { color: #d73a49; }
+.highlight .o { color: #d73a49; }
+.highlight .s { color: #032f62; }
+.highlight .mi { color: #005cc5; }
+.highlight .nf { color: #6f42c1; }
+.highlight .nb { color: #005cc5; }
+.highlight .n  { color: #24292e; }
