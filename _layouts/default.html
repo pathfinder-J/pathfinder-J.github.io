@@ -47,34 +47,10 @@
     document.addEventListener("DOMContentLoaded", function () {
       const COLLAPSED_HEIGHT = 220;
 
-      document.querySelectorAll(".highlighter-rouge > .highlight").forEach(function(block){
-        const contentHeight = block.scrollHeight;
+      // ✅ 바깥 div.highlight만 (pre.highlight 제외)
+      document.querySelectorAll(".highlighter-rouge > .highlight").forEach(function (block) {
 
-        if (contentHeight <= COLLAPSED_HEIGHT + 20) {
-          block.classList.add("is-short");
-        } else {
-          block.classList.add("is-collapsed");
-
-          const toggleBtn = document.createElement("button");
-          toggleBtn.className = "code-toggle-btn";
-          toggleBtn.type = "button";
-          toggleBtn.textContent = "Expand";
-
-          toggleBtn.addEventListener("click", function () {
-            const collapsed = block.classList.contains("is-collapsed");
-
-            if (collapsed) {
-              block.classList.remove("is-collapsed");
-              toggleBtn.textContent = "Collapse";
-            } else {
-              block.classList.add("is-collapsed");
-              toggleBtn.textContent = "Expand";
-            }
-          });
-
-          block.appendChild(toggleBtn);
-        }
-
+        // ----- Copy 버튼: 항상 1개만 생성 -----
         if (!block.querySelector(".code-copy-btn")) {
           const copyBtn = document.createElement("button");
           copyBtn.className = "code-copy-btn";
@@ -94,12 +70,54 @@
               setTimeout(() => {
                 copyBtn.textContent = "Copy";
                 copyBtn.classList.remove("copied");
-              }, 1500);
+              }, 1200);
             });
           });
 
           block.appendChild(copyBtn);
         }
+
+        // ----- Expand/Collapse: 높이 측정 안정화 -----
+        requestAnimationFrame(() => {
+          const contentHeight = block.scrollHeight;
+
+          // 짧은 코드면 Expand 숨김 처리
+          if (contentHeight <= COLLAPSED_HEIGHT + 20) {
+            block.classList.add("is-short");
+            block.classList.remove("is-collapsed");
+
+            // 혹시 이전에 남아있던 Expand 버튼이 있으면 제거
+            const existingToggle = block.querySelector(".code-toggle-btn");
+            if (existingToggle) existingToggle.remove();
+            return;
+          }
+
+          // 긴 코드면 기본 접힘
+          block.classList.remove("is-short");
+          block.classList.add("is-collapsed");
+
+          // Expand 버튼은 1개만 생성
+          if (!block.querySelector(".code-toggle-btn")) {
+            const toggleBtn = document.createElement("button");
+            toggleBtn.className = "code-toggle-btn";
+            toggleBtn.type = "button";
+            toggleBtn.textContent = "Expand";
+
+            toggleBtn.addEventListener("click", function () {
+              const collapsed = block.classList.contains("is-collapsed");
+
+              if (collapsed) {
+                block.classList.remove("is-collapsed");
+                toggleBtn.textContent = "Collapse";
+              } else {
+                block.classList.add("is-collapsed");
+                toggleBtn.textContent = "Expand";
+              }
+            });
+
+            block.appendChild(toggleBtn);
+          }
+        });
       });
     });
   </script>
