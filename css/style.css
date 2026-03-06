@@ -131,7 +131,7 @@ code{
 .code-viewport{
   position: relative;
   width: max-content;
-  min-width: 100%;
+  min-width: 0;
 }
 
 /* reset */
@@ -166,7 +166,7 @@ code{
 
 /* line-number table */
 .highlighter-rouge .rouge-table{
-  width: max-content !important;
+  display: inline-table;
   min-width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
@@ -194,7 +194,7 @@ code{
 /* plain pre fallback */
 .highlighter-rouge .highlight > pre,
 .highlighter-rouge .code-viewport > pre{
-  width: max-content;
+  width: inline-block;
   min-width: 100%;
   white-space: pre;
 }
