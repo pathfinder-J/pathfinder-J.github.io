@@ -115,11 +115,12 @@ code{
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 44px 12px 14px 12px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* scroll area */
 .code-scroll{
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -128,6 +129,8 @@ code{
 /* visible clipped area */
 .code-viewport{
   position: relative;
+  width: max-content;
+  min-width: 100%;
 }
 
 /* reset */
@@ -162,7 +165,7 @@ code{
 
 /* line-number table */
 .highlighter-rouge .rouge-table{
-  width: max-content;
+  width: max-content !important;
   min-width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
@@ -187,8 +190,12 @@ code{
   margin: 0 !important;
 }
 
-.highlighter-rouge .highlight > pre{
-  min-width: max-content;
+/* plain pre fallback */
+.highlighter-rouge .highlight > pre,
+.highlighter-rouge .code-viewport > pre{
+  width: max-content;
+  min-width: 100%;
+  white-space: pre;
 }
 
 /* language badge */
