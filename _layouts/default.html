@@ -7,25 +7,40 @@
 <body>
   {% include header.html %}
 
-  <main class="container">
-    <article class="post">
-      {% unless page.url == "/" %}
-        <h1 class="post-title">{{ page.title }}</h1>
-      {% endunless %}
+  <main class="page-shell">
 
-      {% if page.date %}
-        <div class="post-meta">{{ page.date | date: "%Y-%m-%d" }}</div>
-      {% endif %}
-
+    <!-- LEFT TOC -->
+    <aside class="page-toc-column">
       <nav id="toc" class="post-toc"></nav>
+    </aside>
 
-      <div class="post-content">
-        {{ content }}
+    <!-- MAIN CONTENT -->
+    <section class="page-content-column">
+      <div class="container">
+        <article class="post">
+
+          {% unless page.url == "/" %}
+            <h1 class="post-title">{{ page.title }}</h1>
+          {% endunless %}
+
+          {% if page.date %}
+            <div class="post-meta">
+              {{ page.date | date: "%Y-%m-%d" }}
+            </div>
+          {% endif %}
+
+          <div class="post-content">
+            {{ content }}
+          </div>
+
+        </article>
       </div>
-    </article>
+    </section>
+
   </main>
 
   {% include footer.html %}
   {% include scripts.html %}
+
 </body>
 </html>
