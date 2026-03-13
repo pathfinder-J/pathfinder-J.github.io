@@ -30,6 +30,7 @@
 /* ===== TOC BOX ===== */
 
 .post-toc{
+  display: block;
   padding: 14px 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -50,22 +51,12 @@
 }
 
 .post-toc-toggle{
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--text);
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
+  display: none;
 }
 
 .post-toc-body{
   max-height: calc(100vh - 180px);
   overflow-y: auto;
-}
-
-.post-toc.is-collapsed .post-toc-body{
-  display: none;
 }
 
 
@@ -135,27 +126,19 @@
   }
 
   .page-toc-column{
-    position: static !important;
-    top: auto !important;
-    align-self: auto;
+    position: static;
+    top: auto;
     order: -1;
   }
 
   .post-toc{
-    position: static !important;
-    max-height: none !important;
-    overflow: visible !important;
+    display: block;
     padding: 12px 14px;
   }
 
   .post-toc-body{
-    display: block !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  .post-toc-toggle{
-    display: none !important;
+    max-height: none;
+    overflow-y: visible;
   }
 
   .post-toc-title{
