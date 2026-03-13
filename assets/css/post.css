@@ -1,0 +1,32 @@
+.post-title{
+  margin: 18px 0 8px;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.post-meta{
+  color: var(--muted);
+  margin-bottom: 22px;
+  font-size: 14px;
+}
+
+.post-content p{
+  margin: 14px 0;
+}
+
+.post-content h2{
+  margin-top: 36px;
+  font-size: 24px;
+}
+
+.post-content h3{
+  margin-top: 26px;
+  font-size: 20px;
+}
+
+.post-content img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 18px auto;
+}
