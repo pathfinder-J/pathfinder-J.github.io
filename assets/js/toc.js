@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!toc || !content) return;
 
-  const headings = Array.from(content.querySelectorAll("h2, h3"));
+  const headings = Array.from(content.querySelectorAll("h1, h2, h3"));
   if (headings.length === 0) {
     toc.innerHTML = "";
     return;
@@ -33,13 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
       number = h1Count > 0 ? `${h1Count}.${h2Count}` : `${h2Count}`;
     } else {
       h3Count += 1;
-      if (h1Count > 0 && h2Count > 0) {
-        number = `${h1Count}.${h2Count}.${h3Count}`;
-      } else if (h2Count > 0) {
-        number = `${h2Count}.${h3Count}`;
-      } else {
-        number = `${h3Count}`;
-      }
+      number = h1Count > 0 && h2Count > 0
+        ? `${h1Count}.${h2Count}.${h3Count}`
+        : h2Count > 0
+        ? `${h2Count}.${h3Count}`
+        : `${h3Count}`;
     }
 
     const originalText = heading.dataset.originalText || heading.textContent.trim();
@@ -61,12 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       heading.dataset.numbered = "true";
     }
 
-    return {
-      heading,
-      tag,
-      number,
-      title: originalText
-    };
+    return { heading, tag, number, title: originalText };
   });
 
   const ul = document.createElement("ul");
@@ -108,91 +101,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateActiveHeading() {
-    const offset = 140;
+    const offset = 160;
     let current = headings[0];
 
     for (const heading of headings) {
-      const rect = heading.getBoundingClientRect();
-      if (rect.top - offset <= 0) {
+      const top = heading.getBoundingClientRect().top;
+      if (top <= offset) {
         current = heading;
       } else {
         break;
       }
     }
 
-    const docBottomReached =
-      window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
+    const nearBottom =
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
 
-    if (docBottomReached) {
+    if (nearBottom) {
       current = headings[headings.length - 1];
     }
 
     setActive(current.id);
   }
-
-  window.addEventListener("scroll", updateActiveHeading, { passive: true });
-  window.addEventListener("resize", updateActiveHeading);
-
-  updateActiveHeading();
-});  toc.innerHTML = "";
-  toc.appendChild(ul);
-
-  const links = Array.from(toc.querySelectorAll("a"));
-  let activeId = null;
-
-  const setActive = (id) => {
-    if (!id || activeId === id) return;
-    activeId = id;
-
-    links.forEach((link) => {
-      const isActive = link.getAttribute("href") === `#${id}`;
-      link.classList.toggle("active", isActive);
-    });
-
-    const activeLink = toc.querySelector(`a[href="#${id}"]`);
-    if (activeLink) {
-      activeLink.scrollIntoView({
-        block: "nearest"
-      });
-    }
-  };
-
-  /* 현재 보고 있는 heading 계산 */
-  const updateActiveHeading = () => {
-    let current = headings[0];
-
-    for (const heading of headings) {
-      const rect = heading.getBoundingClientRect();
-      if (rect.top <= 140) {
-        current = heading;
-      } else {
-        break;
-      }
-    }
-
-    if (current) {
-      setActive(current.id);
-    }
-  };
-
-  /* IntersectionObserver + scroll fallback 같이 사용 */
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-      if (visible.length > 0) {
-        setActive(visible[0].target.id);
-      }
-    },
-    {
-      rootMargin: "0px 0px -70% 0px",
-      threshold: [0, 0.1, 0.25, 0.5, 1]
-    }
-  );
-
-  headings.forEach((heading) => observer.observe(heading));
 
   window.addEventListener("scroll", updateActiveHeading, { passive: true });
   window.addEventListener("resize", updateActiveHeading);
