@@ -10,15 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const ul = document.createElement("ul");
-
   let h1Count = 0;
   let h2Count = 0;
   let h3Count = 0;
 
-  const headingInfo = [];
-
-  headings.forEach((heading, index) => {
+  const headingInfo = headings.map((heading, index) => {
     if (!heading.id) {
       heading.id = `heading-${index}`;
     }
@@ -35,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       h2Count += 1;
       h3Count = 0;
       number = h1Count > 0 ? `${h1Count}.${h2Count}` : `${h2Count}`;
-    } else if (tag === "h3") {
+    } else {
       h3Count += 1;
       if (h1Count > 0 && h2Count > 0) {
         number = `${h1Count}.${h2Count}.${h3Count}`;
@@ -46,34 +42,35 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    headingInfo.push({
+    const originalText = heading.dataset.originalText || heading.textContent.trim();
+    heading.dataset.originalText = originalText;
+
+    if (heading.dataset.numbered !== "true") {
+      heading.textContent = "";
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "heading-number";
+      numSpan.textContent = number;
+
+      const textSpan = document.createElement("span");
+      textSpan.className = "heading-text";
+      textSpan.textContent = originalText;
+
+      heading.appendChild(numSpan);
+      heading.appendChild(textSpan);
+      heading.dataset.numbered = "true";
+    }
+
+    return {
       heading,
       tag,
       number,
-      title: heading.textContent.trim()
-    });
+      title: originalText
+    };
   });
 
-  /* 본문 heading 앞에도 번호 붙이기 */
-  headingInfo.forEach(({ heading, number, title }) => {
-    if (heading.dataset.numbered === "true") return;
+  const ul = document.createElement("ul");
 
-    heading.textContent = "";
-
-    const numSpan = document.createElement("span");
-    numSpan.className = "heading-number";
-    numSpan.textContent = number;
-
-    const textSpan = document.createElement("span");
-    textSpan.className = "heading-text";
-    textSpan.textContent = title;
-
-    heading.appendChild(numSpan);
-    heading.appendChild(textSpan);
-    heading.dataset.numbered = "true";
-  });
-
-  /* TOC 생성 */
   headingInfo.forEach(({ heading, tag, number, title }) => {
     const li = document.createElement("li");
     li.className = `toc-${tag}`;
@@ -87,6 +84,57 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   toc.innerHTML = "";
+  toc.appendChild(ul);
+
+  const links = Array.from(toc.querySelectorAll("a"));
+  let activeId = null;
+
+  function setActive(id) {
+    if (!id || activeId === id) return;
+    activeId = id;
+
+    links.forEach((link) => {
+      const isActive = link.getAttribute("href") === `#${id}`;
+      link.classList.toggle("active", isActive);
+    });
+
+    const activeLink = toc.querySelector(`a[href="#${id}"]`);
+    if (activeLink) {
+      activeLink.scrollIntoView({
+        block: "nearest",
+        inline: "nearest"
+      });
+    }
+  }
+
+  function updateActiveHeading() {
+    const offset = 140;
+    let current = headings[0];
+
+    for (const heading of headings) {
+      const rect = heading.getBoundingClientRect();
+      if (rect.top - offset <= 0) {
+        current = heading;
+      } else {
+        break;
+      }
+    }
+
+    const docBottomReached =
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
+
+    if (docBottomReached) {
+      current = headings[headings.length - 1];
+    }
+
+    setActive(current.id);
+  }
+
+  window.addEventListener("scroll", updateActiveHeading, { passive: true });
+  window.addEventListener("resize", updateActiveHeading);
+
+  updateActiveHeading();
+});  toc.innerHTML = "";
   toc.appendChild(ul);
 
   const links = Array.from(toc.querySelectorAll("a"));
