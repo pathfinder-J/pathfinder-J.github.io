@@ -1,5 +1,5 @@
 ---
-layout: defalut
+layout: default
 title: "InfoNCE 직관"
 date: 2026-03-05
 ---
