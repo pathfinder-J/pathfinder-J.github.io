@@ -1,1 +1,37 @@
-sdfsf
+.search-box{
+  margin: 20px 0 24px;
+}
+
+.search-box input{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.search-results{
+  margin-top: 20px;
+}
+
+.search-result-item{
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-result-title{
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.search-result-title:hover{
+  text-decoration: underline;
+}
+
+.search-result-snippet{
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
