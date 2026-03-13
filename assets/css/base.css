@@ -1,1 +1,42 @@
-sdffsd
+:root{
+  --text: #111;
+  --muted: #666;
+  --bg: #fff;
+  --link: #0b57d0;
+  --code-bg: #f6f8fa;
+  --border: #e6e6e6;
+}
+
+html{
+  background: var(--bg);
+}
+
+body{
+  margin: 0;
+  color: var(--text);
+  font-family: "Noto Sans KR","Noto Sans",system-ui,sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a{
+  color: var(--link);
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+pre,
+code{
+  font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-size: 14px;
+}
+
+:not(pre) > code{
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
