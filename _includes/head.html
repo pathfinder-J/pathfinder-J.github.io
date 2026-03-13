@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  {% include head.html %}
+</head>
+<body>
+  {% include header.html %}
+
+  <main class="container">
+    <article class="post">
+      {% unless page.url == "/" %}
+        <h1 class="post-title">{{ page.title }}</h1>
+      {% endunless %}
+
+      {% if page.date %}
+        <div class="post-meta">{{ page.date | date: "%Y-%m-%d" }}</div>
+      {% endif %}
+
+      <div class="post-content">
+        {{ content }}
+      </div>
+    </article>
+  </main>
+
+  {% include footer.html %}
+  {% include scripts.html %}
+</body>
+</html>
