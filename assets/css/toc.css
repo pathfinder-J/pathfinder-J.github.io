@@ -1,18 +1,19 @@
-.page-with-toc {
+.page-shell {
   display: flex;
   align-items: flex-start;
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  box-sizing: border-box;
 }
 
-.toc-sidebar {
+.page-toc-column {
   width: 260px;
   flex-shrink: 0;
 }
 
-.toc-inner {
+.post-toc {
   position: sticky;
   top: 2rem;
   max-height: calc(100vh - 4rem);
@@ -21,74 +22,66 @@
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: #fafafa;
+  box-sizing: border-box;
 }
 
-.toc-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-}
-
-.post-main {
+.page-content-column {
   flex: 1;
   min-width: 0;
 }
 
-.post-content {
-  min-width: 0;
-}
-
-#toc ul {
+.post-toc ul {
   list-style: none;
-  padding-left: 0;
   margin: 0;
+  padding: 0;
 }
 
-#toc li {
+.post-toc li {
   margin: 0.3rem 0;
 }
 
-#toc a {
+.post-toc a {
+  display: block;
   text-decoration: none;
   color: #444;
-  font-size: 0.95rem;
   line-height: 1.5;
-  display: block;
+  word-break: break-word;
 }
 
-#toc a:hover {
+.post-toc a:hover {
   color: #111;
 }
 
-#toc .toc-h2 {
+.post-toc .toc-h2 {
   padding-left: 0.75rem;
 }
 
-#toc .toc-h3 {
+.post-toc .toc-h3 {
   padding-left: 1.5rem;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: #666;
 }
 
-#toc a.active {
+.post-toc a.active {
   font-weight: 700;
   color: #111;
 }
 
-/* 화면이 좁아지면 위로 보내거나 숨기기 */
 @media (max-width: 1000px) {
-  .page-with-toc {
+  .page-shell {
     display: block;
   }
 
-  .toc-sidebar {
+  .page-toc-column {
     width: 100%;
     margin-bottom: 1.5rem;
   }
 
-  .toc-inner {
-    position: relative;
-    top: 0;
+  .post-toc {
+    position: static;
+    max-height: none;
+  }
+}    top: 0;
     max-height: none;
   }
 }
