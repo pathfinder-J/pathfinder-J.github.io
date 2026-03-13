@@ -1,0 +1,16 @@
+---
+layout: none
+---
+
+[
+  {% assign docs = site.pages | concat: site.posts %}
+  {% for doc in docs %}
+    {% if doc.title %}
+    {
+      "title": {{ doc.title | jsonify }},
+      "url": {{ doc.url | relative_url | jsonify }},
+      "content": {{ doc.content | strip_html | normalize_whitespace | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endif %}
+  {% endfor %}
+]
