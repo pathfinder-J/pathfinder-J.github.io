@@ -135,18 +135,27 @@
   }
 
   .page-toc-column{
-    position: static;
-    top: auto;
+    position: static !important;
+    top: auto !important;
+    align-self: auto;
     order: -1;
   }
 
   .post-toc{
+    position: static !important;
+    max-height: none !important;
+    overflow: visible !important;
     padding: 12px 14px;
   }
 
   .post-toc-body{
-    max-height: none;
-    overflow-y: visible;
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .post-toc-toggle{
+    display: none !important;
   }
 
   .post-toc-title{
