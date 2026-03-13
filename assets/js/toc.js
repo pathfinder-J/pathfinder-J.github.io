@@ -98,15 +98,18 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
   }
 
-  setCollapsed(window.innerWidth <= 960);
+  /* 기본은 항상 펼쳐진 상태 */
+  setCollapsed(false);
 
   toggleBtn.addEventListener("click", function () {
     setCollapsed(!toc.classList.contains("is-collapsed"));
+    toc.dataset.userToggled = "true";
   });
 
   window.addEventListener("resize", function () {
-    if (window.innerWidth <= 960 && !toc.dataset.userToggled) {
-      setCollapsed(true);
+    /* 리사이즈 시 강제 collapse/expand 하지 않음 */
+    if (!toc.dataset.userToggled) {
+      setCollapsed(false);
     }
   });
 
@@ -120,35 +123,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!target) return;
 
-      const offset = window.innerWidth <= 960 ? 72 : 80;
+      const offset = window.innerWidth <= 960 ? 72 : 88;
       const y = target.getBoundingClientRect().top + window.scrollY - offset;
 
       window.scrollTo({
         top: y,
         behavior: "smooth"
       });
-
-      if (window.innerWidth <= 960) {
-        setCollapsed(true);
-      }
     });
-  });
-
-  toggleBtn.addEventListener("click", function () {
-    toc.dataset.userToggled = "true";
   });
 
   function activateLink() {
-    let current = null;
+    const scrollOffset = window.innerWidth <= 960 ? 90 : 110;
+    const scrollY = window.scrollY;
+
+    let current = items[0];
 
     items.forEach(function (item) {
-      const rect = item.heading.getBoundingClientRect();
-      if (rect.top <= 120) {
+      const headingTop = item.heading.getBoundingClientRect().top + window.scrollY;
+      if (scrollY + scrollOffset >= headingTop) {
         current = item;
       }
     });
-
-    if (!current) current = items[0];
 
     items.forEach(function (item) {
       item.link.classList.remove("toc-active");
@@ -156,25 +152,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     current.link.classList.add("toc-active");
 
-    const tocBox = toc;
-    const linkTop = current.link.offsetTop;
-    const linkHeight = current.link.offsetHeight;
-    const boxScrollTop = tocBox.scrollTop;
-    const boxHeight = tocBox.clientHeight;
+    /* 데스크탑에서만 TOC 내부 스크롤 보정 */
+    if (window.innerWidth > 960) {
+      const tocBox = body;
+      const linkTop = current.link.offsetTop;
+      const linkHeight = current.link.offsetHeight;
+      const boxScrollTop = tocBox.scrollTop;
+      const boxHeight = tocBox.clientHeight;
 
-    if (linkTop < boxScrollTop + 40) {
-      tocBox.scrollTo({
-        top: Math.max(linkTop - 40, 0),
-        behavior: "smooth"
-      });
-    } else if (linkTop + linkHeight > boxScrollTop + boxHeight - 40) {
-      tocBox.scrollTo({
-        top: linkTop - boxHeight + linkHeight + 40,
-        behavior: "smooth"
-      });
+      if (linkTop < boxScrollTop + 24) {
+        tocBox.scrollTo({
+          top: Math.max(linkTop - 24, 0),
+          behavior: "smooth"
+        });
+      } else if (linkTop + linkHeight > boxScrollTop + boxHeight - 24) {
+        tocBox.scrollTo({
+          top: linkTop - boxHeight + linkHeight + 24,
+          behavior: "smooth"
+        });
+      }
     }
   }
 
-  window.addEventListener("scroll", activateLink, { passive: true });
+  let ticking = false;
+
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(function () {
+        activateLink();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", activateLink);
+
   activateLink();
 });
