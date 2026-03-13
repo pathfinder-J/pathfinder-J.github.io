@@ -143,7 +143,6 @@ document.addEventListener("DOMContentLoaded", function () {
     current.link.classList.add("toc-active");
 
     const tocBox = toc;
-
     const linkTop = current.link.offsetTop;
     const linkHeight = current.link.offsetHeight;
     const boxScrollTop = tocBox.scrollTop;
