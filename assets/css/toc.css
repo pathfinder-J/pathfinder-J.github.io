@@ -12,7 +12,7 @@
 
 .page-toc-column{
   position: sticky;
-  top: 80px;
+  top: 24px;
   align-self: start;
 }
 
@@ -55,8 +55,10 @@
 }
 
 .post-toc-body{
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 80px);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: auto;
 }
 
 
