@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
   const toc = document.getElementById("toc");
   const content = document.getElementById("post-content");
 
@@ -14,9 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let h2Count = 0;
   let h3Count = 0;
 
-  const headingInfo = headings.map((heading, index) => {
+  const ul = document.createElement("ul");
+  const headingData = [];
+
+  headings.forEach(function (heading, index) {
     if (!heading.id) {
-      heading.id = `heading-${index}`;
+      heading.id = "heading-" + index;
     }
 
     const tag = heading.tagName.toLowerCase();
@@ -26,24 +29,41 @@ document.addEventListener("DOMContentLoaded", () => {
       h1Count += 1;
       h2Count = 0;
       h3Count = 0;
-      number = `${h1Count}`;
+      number = String(h1Count);
     } else if (tag === "h2") {
       h2Count += 1;
       h3Count = 0;
-      number = h1Count > 0 ? `${h1Count}.${h2Count}` : `${h2Count}`;
+      number = h1Count > 0 ? h1Count + "." + h2Count : String(h2Count);
     } else {
       h3Count += 1;
-      number = h1Count > 0 && h2Count > 0
-        ? `${h1Count}.${h2Count}.${h3Count}`
-        : h2Count > 0
-        ? `${h2Count}.${h3Count}`
-        : `${h3Count}`;
+      if (h1Count > 0 && h2Count > 0) {
+        number = h1Count + "." + h2Count + "." + h3Count;
+      } else if (h2Count > 0) {
+        number = h2Count + "." + h3Count;
+      } else {
+        number = String(h3Count);
+      }
     }
 
-    const originalText = heading.dataset.originalText || heading.textContent.trim();
-    heading.dataset.originalText = originalText;
+    const originalText =
+      heading.getAttribute("data-original-text") || heading.textContent.trim();
 
-    if (heading.dataset.numbered !== "true") {
+    heading.setAttribute("data-original-text", originalText);
+
+    headingData.push({
+      heading: heading,
+      tag: tag,
+      number: number,
+      title: originalText
+    });
+  });
+
+  headingData.forEach(function (item) {
+    const heading = item.heading;
+    const number = item.number;
+    const title = item.title;
+
+    if (!heading.querySelector(".heading-number")) {
       heading.textContent = "";
 
       const numSpan = document.createElement("span");
@@ -52,25 +72,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const textSpan = document.createElement("span");
       textSpan.className = "heading-text";
-      textSpan.textContent = originalText;
+      textSpan.textContent = title;
 
       heading.appendChild(numSpan);
+      heading.appendChild(document.createTextNode(" "));
       heading.appendChild(textSpan);
-      heading.dataset.numbered = "true";
     }
 
-    return { heading, tag, number, title: originalText };
-  });
-
-  const ul = document.createElement("ul");
-
-  headingInfo.forEach(({ heading, tag, number, title }) => {
     const li = document.createElement("li");
-    li.className = `toc-${tag}`;
+    li.className = "toc-" + item.tag;
 
     const a = document.createElement("a");
-    a.href = `#${heading.id}`;
-    a.textContent = `${number} ${title}`;
+    a.href = "#" + heading.id;
+    a.textContent = number + " " + title;
 
     li.appendChild(a);
     ul.appendChild(li);
@@ -84,40 +98,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setActive(id) {
     if (!id || activeId === id) return;
+
     activeId = id;
 
-    links.forEach((link) => {
-      const isActive = link.getAttribute("href") === `#${id}`;
+    links.forEach(function (link) {
+      const isActive = link.getAttribute("href") === "#" + id;
       link.classList.toggle("active", isActive);
     });
 
-    const activeLink = toc.querySelector(`a[href="#${id}"]`);
+    const activeLink = toc.querySelector('a[href="#' + id + '"]');
     if (activeLink) {
       activeLink.scrollIntoView({
-        block: "nearest",
-        inline: "nearest"
+        block: "nearest"
       });
     }
   }
 
   function updateActiveHeading() {
-    const offset = 160;
+    const offset = 180;
     let current = headings[0];
 
-    for (const heading of headings) {
-      const top = heading.getBoundingClientRect().top;
-      if (top <= offset) {
-        current = heading;
+    for (let i = 0; i < headings.length; i++) {
+      const rect = headings[i].getBoundingClientRect();
+
+      if (rect.top <= offset) {
+        current = headings[i];
       } else {
         break;
       }
-    }
-
-    const nearBottom =
-      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-
-    if (nearBottom) {
-      current = headings[headings.length - 1];
     }
 
     setActive(current.id);
