@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function getMeasureTarget(wrapper, viewport) {
     return (
       wrapper.querySelector(".rouge-code pre") ||
+      wrapper.querySelector(".highlight pre") ||
       wrapper.querySelector("pre") ||
       viewport
     );
@@ -43,12 +44,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getCopySource(wrapper) {
-    return wrapper.querySelector(".rouge-code pre") || wrapper.querySelector("pre");
+    return (
+      wrapper.querySelector(".rouge-code pre") ||
+      wrapper.querySelector(".highlight pre") ||
+      wrapper.querySelector("pre")
+    );
   }
 
   function ensureShell(wrapper) {
     var shell = wrapper.parentElement;
-    if (!shell.classList.contains("code-block-shell")) {
+    if (!shell || !shell.classList.contains("code-block-shell")) {
       shell = document.createElement("div");
       shell.className = "code-block-shell";
       wrapper.parentNode.insertBefore(shell, wrapper);
@@ -67,12 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return toolbar;
   }
 
-  function ensureLangBadge(highlight, lang) {
-    var badge = highlight.querySelector(":scope > .code-lang");
+  function ensureLangBadge(container, lang) {
+    var badge = container.querySelector(":scope > .code-lang");
     if (!badge) {
       badge = document.createElement("div");
       badge.className = "code-lang";
-      highlight.appendChild(badge);
+      container.appendChild(badge);
     }
 
     if (lang) {
@@ -83,8 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function ensureStructure(highlight) {
-    var existingScroll = highlight.querySelector(":scope > .code-scroll");
+  function ensureStructure(container) {
+    var existingScroll = container.querySelector(":scope > .code-scroll");
     if (existingScroll) {
       var existingViewport = existingScroll.querySelector(":scope > .code-viewport");
       if (existingViewport) {
@@ -93,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     var nodesToMove = [];
-    Array.from(highlight.childNodes).forEach(function (node) {
+    Array.from(container.childNodes).forEach(function (node) {
       if (
         node.nodeType === 1 &&
         node.classList &&
@@ -115,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     scroll.appendChild(viewport);
-    highlight.appendChild(scroll);
+    container.appendChild(scroll);
 
     return { scroll: scroll, viewport: viewport };
   }
@@ -128,24 +133,35 @@ document.addEventListener("DOMContentLoaded", function () {
       copyBtn.type = "button";
       copyBtn.textContent = "Copy";
 
-      copyBtn.addEventListener("click", function () {
+      copyBtn.addEventListener("click", async function () {
         var source = getCopySource(wrapper);
         if (!source) return;
 
-        navigator.clipboard.writeText(source.innerText).then(function () {
+        var text = source.innerText || source.textContent || "";
+
+        try {
+          await navigator.clipboard.writeText(text);
           copyBtn.textContent = "Copied";
           copyBtn.classList.add("copied");
+        } catch (e) {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand("copy");
+            copyBtn.textContent = "Copied";
+            copyBtn.classList.add("copied");
+          } catch (_) {
+            copyBtn.textContent = "Failed";
+          }
+          document.body.removeChild(ta);
+        }
 
-          setTimeout(function () {
-            copyBtn.textContent = "Copy";
-            copyBtn.classList.remove("copied");
-          }, 1200);
-        }).catch(function () {
-          copyBtn.textContent = "Failed";
-          setTimeout(function () {
-            copyBtn.textContent = "Copy";
-          }, 1200);
-        });
+        setTimeout(function () {
+          copyBtn.textContent = "Copy";
+          copyBtn.classList.remove("copied");
+        }, 1200);
       });
 
       toolbar.appendChild(copyBtn);
@@ -166,46 +182,18 @@ document.addEventListener("DOMContentLoaded", function () {
     return toggleBtn;
   }
 
-  function forceHorizontalOverflow(wrapper, viewport) {
-    var pre = wrapper.querySelector(".rouge-code pre") || wrapper.querySelector("pre");
-    var table = wrapper.querySelector(".rouge-table");
-    var codeCell = wrapper.querySelector(".rouge-code");
-
-    viewport.style.width = "100%";
-    viewport.style.minWidth = "0";
-
-    if (pre) {
-      pre.style.whiteSpace = "pre";
-      pre.style.display = "inline-block";
-      pre.style.minWidth = "100%";
-      pre.style.width = "";
-    }
-
-    if (table) {
-      table.style.display = "inline-table";
-      table.style.minWidth = "100%";
-      table.style.width = "";
-    }
-
-    if (codeCell) {
-      codeCell.style.whiteSpace = "pre";
-    }
-  }
-
   function setupBlock(wrapper) {
-    var highlight = wrapper.querySelector(".highlight");
-    if (!highlight) return;
+    var container = wrapper.querySelector(".highlight") || wrapper;
+    if (!container) return;
 
     var shell = ensureShell(wrapper);
     var toolbar = ensureToolbar(shell);
     var lang = detectLanguage(wrapper);
-    ensureLangBadge(highlight, lang);
+    ensureLangBadge(container, lang);
 
-    var structure = ensureStructure(highlight);
+    var structure = ensureStructure(container);
     var scroll = structure.scroll;
     var viewport = structure.viewport;
-
-    forceHorizontalOverflow(wrapper, viewport);
 
     var copyBtn = ensureCopyButton(toolbar, wrapper);
     var toggleBtn = ensureToggleButton(toolbar, copyBtn);
@@ -217,28 +205,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (fullHeight <= collapsedHeight + 2) {
       shell.classList.add("is-short");
-      highlight.classList.remove("is-collapsed");
+      container.classList.remove("is-collapsed");
       viewport.style.maxHeight = "";
       viewport.style.overflowY = "";
       toggleBtn.style.display = "none";
     } else {
       shell.classList.remove("is-short");
       toggleBtn.style.display = "inline-block";
-      highlight.classList.add("is-collapsed");
+      container.classList.add("is-collapsed");
       viewport.style.maxHeight = collapsedHeight + "px";
       viewport.style.overflowY = "hidden";
       toggleBtn.textContent = "Expand";
 
       toggleBtn.onclick = function () {
-        var isCollapsed = highlight.classList.contains("is-collapsed");
+        var isCollapsed = container.classList.contains("is-collapsed");
 
         if (isCollapsed) {
-          highlight.classList.remove("is-collapsed");
+          container.classList.remove("is-collapsed");
           viewport.style.maxHeight = "";
           viewport.style.overflowY = "";
           toggleBtn.textContent = "Collapse";
         } else {
-          highlight.classList.add("is-collapsed");
+          container.classList.add("is-collapsed");
           viewport.style.maxHeight = collapsedHeight + "px";
           viewport.style.overflowY = "hidden";
           toggleBtn.textContent = "Expand";
@@ -249,7 +237,12 @@ document.addEventListener("DOMContentLoaded", function () {
     scroll.scrollLeft = 0;
   }
 
-  document.querySelectorAll(".highlighter-rouge").forEach(function (wrapper) {
+  document.querySelectorAll(".highlighter-rouge, pre > code").forEach(function (node) {
+    var wrapper = node.classList.contains("highlighter-rouge")
+      ? node
+      : node.closest("pre");
+
+    if (!wrapper) return;
     setupBlock(wrapper);
   });
 });
