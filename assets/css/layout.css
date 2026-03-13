@@ -1,0 +1,27 @@
+.container{
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 36px 18px 60px;
+}
+
+.site-header{
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
+}
+
+.site-title a{
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.site-title a:hover{
+  text-decoration: underline;
+}
+
+.site-footer{
+  border-top: 1px solid var(--border);
+  padding: 18px;
+  color: var(--muted);
+  text-align: center;
+}
