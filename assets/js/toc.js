@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const content = document.getElementById("post-content");
   const toc = document.getElementById("toc");
+  const content = document.getElementById("post-content");
 
-  if (!content || !toc) return;
+  if (!toc || !content) return;
 
   const headings = content.querySelectorAll("h1, h2, h3");
-  if (headings.length === 0) return;
+  if (headings.length === 0) {
+    toc.innerHTML = "";
+    return;
+  }
 
   const ul = document.createElement("ul");
 
@@ -15,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const li = document.createElement("li");
-    li.classList.add(`toc-${heading.tagName.toLowerCase()}`);
+    li.className = `toc-${heading.tagName.toLowerCase()}`;
 
     const a = document.createElement("a");
     a.href = `#${heading.id}`;
@@ -25,26 +28,27 @@ document.addEventListener("DOMContentLoaded", () => {
     ul.appendChild(li);
   });
 
+  toc.innerHTML = "";
   toc.appendChild(ul);
 
-  const tocLinks = toc.querySelectorAll("a");
+  const links = toc.querySelectorAll("a");
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         const id = entry.target.id;
-        const link = toc.querySelector(`a[href="#${id}"]`);
-        if (!link) return;
+        const activeLink = toc.querySelector(`a[href="#${id}"]`);
+        if (!activeLink) return;
 
         if (entry.isIntersecting) {
-          tocLinks.forEach((l) => l.classList.remove("active"));
-          link.classList.add("active");
+          links.forEach(link => link.classList.remove("active"));
+          activeLink.classList.add("active");
         }
       });
     },
     {
       rootMargin: "0px 0px -70% 0px",
-      threshold: 0.1,
+      threshold: 0.1
     }
   );
 
