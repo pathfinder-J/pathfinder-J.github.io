@@ -1,17 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-
   const toc = document.getElementById("toc");
   const content = document.querySelector(".post-content");
 
   if (!toc || !content) return;
 
-  const headings = content.querySelectorAll("h2, h3");
+  const headings = Array.from(content.querySelectorAll("h2, h3"));
   if (!headings.length) {
     toc.style.display = "none";
     return;
   }
 
-  /* ===== TOC HEADER ===== */
+  toc.innerHTML = "";
 
   const header = document.createElement("div");
   header.className = "post-toc-header";
@@ -27,10 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   header.appendChild(title);
   header.appendChild(toggleBtn);
-
   toc.appendChild(header);
-
-  /* ===== TOC BODY ===== */
 
   const body = document.createElement("div");
   body.className = "post-toc-body";
@@ -38,123 +34,134 @@ document.addEventListener("DOMContentLoaded", function () {
   const ul = document.createElement("ul");
   ul.className = "post-toc-list";
 
-  const links = [];
+  let h2Counter = 0;
+  let h3Counter = 0;
 
-  headings.forEach((heading, index) => {
+  const items = [];
+
+  headings.forEach(function (heading, index) {
+    const tag = heading.tagName.toLowerCase();
 
     if (!heading.id) {
       heading.id = "section-" + (index + 1);
     }
 
-    /* ===== anchor link (#) ===== */
+    if (tag === "h2") {
+      h2Counter += 1;
+      h3Counter = 0;
+    } else if (tag === "h3") {
+      h3Counter += 1;
+    }
+
+    const number = tag === "h2"
+      ? String(h2Counter)
+      : String(h2Counter) + "." + String(h3Counter);
+
+    const originalText = heading.textContent.trim();
+
+    heading.innerHTML = "";
+
+    const numberSpan = document.createElement("span");
+    numberSpan.className = "heading-number";
+    numberSpan.textContent = number + " ";
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "heading-text";
+    textSpan.textContent = originalText;
 
     const anchor = document.createElement("a");
     anchor.href = "#" + heading.id;
     anchor.className = "heading-anchor";
     anchor.textContent = "#";
+    anchor.setAttribute("aria-label", "Anchor link to " + originalText);
 
+    heading.appendChild(numberSpan);
+    heading.appendChild(textSpan);
     heading.appendChild(anchor);
 
-    /* ===== TOC entry ===== */
-
     const li = document.createElement("li");
-    li.className = heading.tagName.toLowerCase() === "h3" ? "toc-h3" : "toc-h2";
+    li.className = tag === "h3" ? "toc-h3" : "toc-h2";
 
     const a = document.createElement("a");
     a.href = "#" + heading.id;
-    a.textContent = heading.textContent.replace("#", "");
+    a.textContent = number + " " + originalText;
 
     li.appendChild(a);
     ul.appendChild(li);
 
-    links.push({
-      link: a,
-      heading: heading
+    items.push({
+      heading: heading,
+      link: a
     });
-
   });
 
   body.appendChild(ul);
   toc.appendChild(body);
 
-  /* ===== TOC COLLAPSE ===== */
-
   toggleBtn.addEventListener("click", function () {
-
     const collapsed = toc.classList.toggle("is-collapsed");
-
     toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
-
   });
 
-  /* ===== SMOOTH SCROLL ===== */
-
-  document.querySelectorAll('.post-toc a').forEach(anchor => {
-
-    anchor.addEventListener("click", function(e){
-
+  items.forEach(function (item) {
+    item.link.addEventListener("click", function (e) {
       e.preventDefault();
 
-      const target = document.querySelector(this.getAttribute("href"));
+      const target = document.getElementById(
+        this.getAttribute("href").slice(1)
+      );
 
       if (!target) return;
 
+      const y = target.getBoundingClientRect().top + window.scrollY - 80;
+
       window.scrollTo({
-        top: target.offsetTop - 80,
+        top: y,
         behavior: "smooth"
       });
-
     });
-
   });
 
-  /* ===== SCROLL SPY ===== */
-
   function activateLink() {
-
     let current = null;
 
-    links.forEach(item => {
-
+    items.forEach(function (item) {
       const rect = item.heading.getBoundingClientRect();
-
       if (rect.top <= 120) {
         current = item;
       }
-
     });
 
-    if (!current) return;
+    if (!current) {
+      current = items[0];
+    }
 
-    links.forEach(item => {
+    items.forEach(function (item) {
       item.link.classList.remove("toc-active");
     });
 
     current.link.classList.add("toc-active");
 
-    /* ===== AUTO SCROLL TOC ===== */
+    const tocBox = toc;
 
-    const container = toc.querySelector(".post-toc-body");
+    const linkTop = current.link.offsetTop;
+    const linkHeight = current.link.offsetHeight;
+    const boxScrollTop = tocBox.scrollTop;
+    const boxHeight = tocBox.clientHeight;
 
-    if (container) {
-
-      const linkRect = current.link.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      if (
-        linkRect.top < containerRect.top ||
-        linkRect.bottom > containerRect.bottom
-      ) {
-        current.link.scrollIntoView({
-          block: "center",
-          behavior: "smooth"
-        });
-      }
-
+    if (linkTop < boxScrollTop + 40) {
+      tocBox.scrollTo({
+        top: Math.max(linkTop - 40, 0),
+        behavior: "smooth"
+      });
+    } else if (linkTop + linkHeight > boxScrollTop + boxHeight - 40) {
+      tocBox.scrollTo({
+        top: linkTop - boxHeight + linkHeight + 40,
+        behavior: "smooth"
+      });
     }
-
   }
 
-  window.addEventListener("scroll", activateLink);
-
+  window.addEventListener("scroll", activateLink, { passive: true });
+  activateLink();
 });
