@@ -167,3 +167,81 @@ document.addEventListener("DOMContentLoaded", function () {
 
   activateLink();
 });
+  function isMobile() {
+    return window.innerWidth <= 960;
+  }
+
+  items.forEach(function (item) {
+    item.link.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const target = document.getElementById(
+        this.getAttribute("href").slice(1)
+      );
+
+      if (!target) return;
+
+      const offset = isMobile() ? 72 : 88;
+      const y = target.getBoundingClientRect().top + window.scrollY - offset;
+
+      window.scrollTo({
+        top: y,
+        behavior: "smooth"
+      });
+    });
+  });
+
+  let currentActiveId = null;
+
+  function getCurrentItem() {
+    const offset = isMobile() ? 90 : 120;
+    const scrollPosition = window.scrollY + offset;
+
+    let current = items[0];
+
+    for (let i = 0; i < items.length; i += 1) {
+      const itemTop = items[i].heading.offsetTop;
+
+      if (itemTop <= scrollPosition) {
+        current = items[i];
+      } else {
+        break;
+      }
+    }
+
+    return current;
+  }
+
+  function activateLink() {
+    const current = getCurrentItem();
+    if (!current) return;
+
+    const newId = current.heading.id;
+    if (newId === currentActiveId) return;
+
+    currentActiveId = newId;
+
+    items.forEach(function (item) {
+      item.link.classList.remove("toc-active");
+    });
+
+    current.link.classList.add("toc-active");
+  }
+
+  let ticking = false;
+
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(function () {
+        activateLink();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", activateLink);
+
+  activateLink();
+});
