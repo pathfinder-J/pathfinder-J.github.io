@@ -87,8 +87,173 @@ document.addEventListener("DOMContentLoaded", function () {
     li.appendChild(a);
     ul.appendChild(li);
 
-    items.push({ heading, link: a });
+    items.push({
+      heading: heading,
+      link: a
+    });
   });
+
+  body.appendChild(ul);
+  toc.appendChild(body);
+
+  function isMobile() {
+    return window.innerWidth <= 960;
+  }
+
+  function setCollapsed(collapsed) {
+    if (isMobile()) {
+      toc.classList.remove("is-collapsed");
+      toggleBtn.textContent = "Collapse";
+      return;
+    }
+
+    toc.classList.toggle("is-collapsed", collapsed);
+    toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
+  }
+
+  setCollapsed(false);
+
+  toggleBtn.addEventListener("click", function () {
+    if (isMobile()) return;
+    setCollapsed(!toc.classList.contains("is-collapsed"));
+  });
+
+  window.addEventListener("resize", function () {
+    setCollapsed(false);
+  });
+
+  items.forEach(function (item) {
+    item.link.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const targetId = this.getAttribute("href").slice(1);
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      const offset = isMobile() ? 72 : 88;
+      const y = target.getBoundingClientRect().top + window.scrollY - offset;
+
+      window.scrollTo({
+        top: y,
+        behavior: "smooth"
+      });
+    });
+  });
+
+  let activeId = null;
+
+  function updateActiveById(id) {
+    if (!id || activeId === id) return;
+    activeId = id;
+
+    let currentItem = null;
+
+    items.forEach(function (item) {
+      const isActive = item.heading.id === id;
+      item.link.classList.toggle("toc-active", isActive);
+      if (isActive) currentItem = item;
+    });
+
+    if (!currentItem) return;
+
+    if (!isMobile()) {
+      const linkTop = currentItem.link.offsetTop;
+      const linkBottom = linkTop + currentItem.link.offsetHeight;
+      const visibleTop = body.scrollTop;
+      const visibleBottom = visibleTop + body.clientHeight;
+      const padding = 24;
+
+      if (linkTop < visibleTop + padding) {
+        body.scrollTo({
+          top: Math.max(linkTop - padding, 0),
+          behavior: "smooth"
+        });
+      } else if (linkBottom > visibleBottom - padding) {
+        body.scrollTo({
+          top: linkBottom - body.clientHeight + padding,
+          behavior: "smooth"
+        });
+      }
+    }
+  }
+
+  function fallbackActivate() {
+    const offset = isMobile() ? 100 : 140;
+    const y = window.scrollY + offset;
+
+    let current = items[0];
+
+    for (let i = 0; i < items.length; i += 1) {
+      const itemTop = items[i].heading.offsetTop;
+      if (itemTop <= y) {
+        current = items[i];
+      } else {
+        break;
+      }
+    }
+
+    updateActiveById(current.heading.id);
+  }
+
+  if ("IntersectionObserver" in window) {
+    const visibleHeadings = new Map();
+
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            visibleHeadings.set(entry.target.id, entry.boundingClientRect.top);
+          } else {
+            visibleHeadings.delete(entry.target.id);
+          }
+        });
+
+        if (visibleHeadings.size > 0) {
+          let bestId = null;
+          let bestTop = -Infinity;
+
+          visibleHeadings.forEach(function (top, id) {
+            if (top <= 160 && top > bestTop) {
+              bestTop = top;
+              bestId = id;
+            }
+          });
+
+          if (!bestId) {
+            let minTop = Infinity;
+            visibleHeadings.forEach(function (top, id) {
+              if (top < minTop) {
+                minTop = top;
+                bestId = id;
+              }
+            });
+          }
+
+          updateActiveById(bestId);
+        } else {
+          fallbackActivate();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-80px 0px -70% 0px",
+        threshold: [0, 1]
+      }
+    );
+
+    items.forEach(function (item) {
+      observer.observe(item.heading);
+    });
+
+    window.addEventListener("scroll", fallbackActivate, { passive: true });
+    window.addEventListener("resize", fallbackActivate);
+  } else {
+    window.addEventListener("scroll", fallbackActivate, { passive: true });
+    window.addEventListener("resize", fallbackActivate);
+  }
+
+  fallbackActivate();
+});  });
 
   body.appendChild(ul);
   toc.appendChild(body);
