@@ -46,9 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
       h3Counter += 1;
     }
 
-    const number = tag === "h2"
-      ? String(h2Counter)
-      : String(h2Counter) + "." + String(h3Counter);
+    const number =
+      tag === "h2"
+        ? String(h2Counter)
+        : String(h2Counter) + "." + String(h3Counter);
 
     const originalText = heading.textContent.trim();
 
@@ -133,6 +134,22 @@ document.addEventListener("DOMContentLoaded", function () {
     return current;
   }
 
+  function keepActiveLinkVisible(link) {
+    if (isMobile()) return;
+
+    const bodyRect = body.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
+
+    const topGap = 12;
+    const bottomGap = 12;
+
+    if (linkRect.top < bodyRect.top + topGap) {
+      body.scrollTop -= bodyRect.top + topGap - linkRect.top;
+    } else if (linkRect.bottom > bodyRect.bottom - bottomGap) {
+      body.scrollTop += linkRect.bottom - (bodyRect.bottom - bottomGap);
+    }
+  }
+
   function activateLink() {
     const current = getCurrentItem();
     if (!current) return;
@@ -147,13 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     current.link.classList.add("toc-active");
-
-    if (!isMobile()) {
-      current.link.scrollIntoView({
-        block: "nearest",
-        inline: "nearest"
-      });
-    }
+    keepActiveLinkVisible(current.link);
   }
 
   let ticking = false;
