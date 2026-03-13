@@ -1,13 +1,13 @@
-<script src="{{ '/assets/js/codeblock.js?v=' | append: site.time | relative_url }}"></script>
-<script src="{{ '/assets/js/toc.js?v=' | append: site.time | relative_url }}"></script>
-<script src="{{ '/assets/js/search.js?v=' | append: site.time | relative_url }}"></script>
+<script src="{{ '/assets/js/codeblock.js?v=' | append: site.github.build_revision | relative_url }}"></script>
+<script src="{{ '/assets/js/toc.js?v=' | append: site.github.build_revision | relative_url }}"></script>
+<script src="{{ '/assets/js/search.js?v=' | append: site.github.build_revision | relative_url }}"></script>
 
 <script>
-  window.GLOSSARY = {
-  {% for item in site.data.glossary %}
-  "{{ item[0] }}": "{{ item[1].url }}",
-  {% endfor %}
-  };
+window.GLOSSARY = {
+{% for item in site.data.glossary %}
+"{{ item[0] }}": "{{ item[1].url }}",
+{% endfor %}
+};
 </script>
 
-<script src="{{ '/assets/js/glossary.js?v=' | append: site.time | relative_url }}"></script>
+<script src="{{ '/assets/js/glossary.js?v=' | append: site.github.build_revision | relative_url }}"></script>
