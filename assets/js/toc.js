@@ -19,12 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   title.className = "post-toc-title";
   title.textContent = "Contents";
 
-  const toggleBtn = document.createElement("button");
-  toggleBtn.className = "post-toc-toggle";
-  toggleBtn.type = "button";
-
   header.appendChild(title);
-  header.appendChild(toggleBtn);
   toc.appendChild(header);
 
   const body = document.createElement("div");
@@ -87,10 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     li.appendChild(a);
     ul.appendChild(li);
 
-    items.push({
-      heading: heading,
-      link: a
-    });
+    items.push({ heading, link: a });
   });
 
   body.appendChild(ul);
@@ -100,34 +92,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return window.innerWidth <= 960;
   }
 
-  function setCollapsed(collapsed) {
-    if (isMobile()) {
-      toc.classList.remove("is-collapsed");
-      toggleBtn.textContent = "Collapse";
-      return;
-    }
-
-    toc.classList.toggle("is-collapsed", collapsed);
-    toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
-  }
-
-  setCollapsed(false);
-
-  toggleBtn.addEventListener("click", function () {
-    if (isMobile()) return;
-    setCollapsed(!toc.classList.contains("is-collapsed"));
-  });
-
-  window.addEventListener("resize", function () {
-    setCollapsed(false);
-  });
-
   items.forEach(function (item) {
     item.link.addEventListener("click", function (e) {
       e.preventDefault();
 
-      const targetId = this.getAttribute("href").slice(1);
-      const target = document.getElementById(targetId);
+      const target = document.getElementById(
+        this.getAttribute("href").slice(1)
+      );
+
       if (!target) return;
 
       const offset = isMobile() ? 72 : 88;
@@ -140,176 +112,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  let activeId = null;
+  let currentActiveId = null;
 
-  function updateActiveById(id) {
-    if (!id || activeId === id) return;
-    activeId = id;
-
-    let currentItem = null;
-
-    items.forEach(function (item) {
-      const isActive = item.heading.id === id;
-      item.link.classList.toggle("toc-active", isActive);
-      if (isActive) currentItem = item;
-    });
-
-    if (!currentItem) return;
-
-    if (!isMobile()) {
-      const linkTop = currentItem.link.offsetTop;
-      const linkBottom = linkTop + currentItem.link.offsetHeight;
-      const visibleTop = body.scrollTop;
-      const visibleBottom = visibleTop + body.clientHeight;
-      const padding = 24;
-
-      if (linkTop < visibleTop + padding) {
-        body.scrollTo({
-          top: Math.max(linkTop - padding, 0),
-          behavior: "smooth"
-        });
-      } else if (linkBottom > visibleBottom - padding) {
-        body.scrollTo({
-          top: linkBottom - body.clientHeight + padding,
-          behavior: "smooth"
-        });
-      }
-    }
-  }
-
-  function fallbackActivate() {
-    const offset = isMobile() ? 100 : 140;
-    const y = window.scrollY + offset;
+  function getCurrentItem() {
+    const offset = isMobile() ? 90 : 120;
+    const scrollPosition = window.scrollY + offset;
 
     let current = items[0];
 
     for (let i = 0; i < items.length; i += 1) {
       const itemTop = items[i].heading.offsetTop;
-      if (itemTop <= y) {
+
+      if (itemTop <= scrollPosition) {
         current = items[i];
       } else {
         break;
       }
     }
 
-    updateActiveById(current.heading.id);
+    return current;
   }
-
-  if ("IntersectionObserver" in window) {
-    const visibleHeadings = new Map();
-
-    const observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            visibleHeadings.set(entry.target.id, entry.boundingClientRect.top);
-          } else {
-            visibleHeadings.delete(entry.target.id);
-          }
-        });
-
-        if (visibleHeadings.size > 0) {
-          let bestId = null;
-          let bestTop = -Infinity;
-
-          visibleHeadings.forEach(function (top, id) {
-            if (top <= 160 && top > bestTop) {
-              bestTop = top;
-              bestId = id;
-            }
-          });
-
-          if (!bestId) {
-            let minTop = Infinity;
-            visibleHeadings.forEach(function (top, id) {
-              if (top < minTop) {
-                minTop = top;
-                bestId = id;
-              }
-            });
-          }
-
-          updateActiveById(bestId);
-        } else {
-          fallbackActivate();
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-80px 0px -70% 0px",
-        threshold: [0, 1]
-      }
-    );
-
-    items.forEach(function (item) {
-      observer.observe(item.heading);
-    });
-
-    window.addEventListener("scroll", fallbackActivate, { passive: true });
-    window.addEventListener("resize", fallbackActivate);
-  } else {
-    window.addEventListener("scroll", fallbackActivate, { passive: true });
-    window.addEventListener("resize", fallbackActivate);
-  }
-
-  fallbackActivate();
-});  });
-
-  body.appendChild(ul);
-  toc.appendChild(body);
-
-  function setCollapsed(collapsed) {
-    toc.classList.toggle("is-collapsed", collapsed);
-    toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
-  }
-
-  /* 기본은 항상 펼쳐진 상태 */
-  setCollapsed(false);
-
-  toggleBtn.addEventListener("click", function () {
-    setCollapsed(!toc.classList.contains("is-collapsed"));
-    toc.dataset.userToggled = "true";
-  });
-
-  window.addEventListener("resize", function () {
-    /* 리사이즈 시 강제 collapse/expand 하지 않음 */
-    if (!toc.dataset.userToggled) {
-      setCollapsed(false);
-    }
-  });
-
-  items.forEach(function (item) {
-    item.link.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      const target = document.getElementById(
-        this.getAttribute("href").slice(1)
-      );
-
-      if (!target) return;
-
-      const offset = window.innerWidth <= 960 ? 72 : 88;
-      const y = target.getBoundingClientRect().top + window.scrollY - offset;
-
-      window.scrollTo({
-        top: y,
-        behavior: "smooth"
-      });
-    });
-  });
 
   function activateLink() {
-    const scrollOffset = window.innerWidth <= 960 ? 90 : 110;
-    const scrollY = window.scrollY;
+    const current = getCurrentItem();
+    if (!current) return;
 
-    let current = items[0];
+    const newId = current.heading.id;
+    if (newId === currentActiveId) return;
 
-    items.forEach(function (item) {
-      const headingTop = item.heading.getBoundingClientRect().top + window.scrollY;
-      if (scrollY + scrollOffset >= headingTop) {
-        current = item;
-      }
-    });
+    currentActiveId = newId;
 
     items.forEach(function (item) {
       item.link.classList.remove("toc-active");
@@ -317,25 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     current.link.classList.add("toc-active");
 
-    /* 데스크탑에서만 TOC 내부 스크롤 보정 */
-    if (window.innerWidth > 960) {
-      const tocBox = body;
-      const linkTop = current.link.offsetTop;
-      const linkHeight = current.link.offsetHeight;
-      const boxScrollTop = tocBox.scrollTop;
-      const boxHeight = tocBox.clientHeight;
-
-      if (linkTop < boxScrollTop + 24) {
-        tocBox.scrollTo({
-          top: Math.max(linkTop - 24, 0),
-          behavior: "smooth"
-        });
-      } else if (linkTop + linkHeight > boxScrollTop + boxHeight - 24) {
-        tocBox.scrollTo({
-          top: linkTop - boxHeight + linkHeight + 24,
-          behavior: "smooth"
-        });
-      }
+    if (!isMobile()) {
+      current.link.scrollIntoView({
+        block: "nearest",
+        inline: "nearest"
+      });
     }
   }
 
