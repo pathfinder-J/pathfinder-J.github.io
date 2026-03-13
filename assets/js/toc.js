@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!toc || !content) return;
 
   const headings = Array.from(content.querySelectorAll("h2, h3"));
+
   if (!headings.length) {
     toc.style.display = "none";
     return;
@@ -30,7 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let h2Counter = 0;
   let h3Counter = 0;
+
   const items = [];
+  const itemMap = new Map();
 
   headings.forEach(function (heading, index) {
     const tag = heading.tagName.toLowerCase();
@@ -83,7 +86,9 @@ document.addEventListener("DOMContentLoaded", function () {
     li.appendChild(a);
     ul.appendChild(li);
 
-    items.push({ heading, link: a });
+    const item = { heading, link: a, index };
+    items.push(item);
+    itemMap.set(heading.id, item);
   });
 
   body.appendChild(ul);
@@ -93,82 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
     return window.innerWidth <= 960;
   }
 
-  items.forEach(function (item) {
-    item.link.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      const target = document.getElementById(
-        this.getAttribute("href").slice(1)
-      );
-
-      if (!target) return;
-
-      const offset = isMobile() ? 72 : 88;
-      const y = target.getBoundingClientRect().top + window.scrollY - offset;
-
-      window.scrollTo({
-        top: y,
-        behavior: "smooth"
-      });
-    });
-  });
-
-  let currentActiveId = null;
-
-  function getCurrentItem() {
-    const offset = isMobile() ? 90 : 120;
-    const scrollPosition = window.scrollY + offset;
-
-    let current = items[0];
-
-    for (let i = 0; i < items.length; i += 1) {
-      const itemTop = items[i].heading.offsetTop;
-
-      if (itemTop <= scrollPosition) {
-        current = items[i];
-      } else {
-        break;
-      }
-    }
-
-    return current;
-  }
-
-  function activateLink() {
-    const current = getCurrentItem();
-    if (!current) return;
-
-    const newId = current.heading.id;
-    if (newId === currentActiveId) return;
-
-    currentActiveId = newId;
-
-    items.forEach(function (item) {
-      item.link.classList.remove("toc-active");
-    });
-
-    current.link.classList.add("toc-active");
-  }
-
-  let ticking = false;
-
-  function onScroll() {
-    if (!ticking) {
-      window.requestAnimationFrame(function () {
-        activateLink();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", activateLink);
-
-  activateLink();
-});
-  function isMobile() {
-    return window.innerWidth <= 960;
+  function getScrollOffset() {
+    return isMobile() ? 72 : 88;
   }
 
   items.forEach(function (item) {
@@ -181,8 +112,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!target) return;
 
-      const offset = isMobile() ? 72 : 88;
-      const y = target.getBoundingClientRect().top + window.scrollY - offset;
+      const y =
+        window.scrollY +
+        target.getBoundingClientRect().top -
+        getScrollOffset();
 
       window.scrollTo({
         top: y,
@@ -193,47 +126,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let currentActiveId = null;
 
-  function getCurrentItem() {
-    const offset = isMobile() ? 90 : 120;
-    const scrollPosition = window.scrollY + offset;
+  function setActive(id) {
+    if (!id || id === currentActiveId) return;
 
-    let current = items[0];
+    currentActiveId = id;
+
+    items.forEach(function (item) {
+      item.link.classList.remove("toc-active");
+    });
+
+    const currentItem = itemMap.get(id);
+    if (currentItem) {
+      currentItem.link.classList.add("toc-active");
+    }
+  }
+
+  function updateActiveByViewport() {
+    const offset = getScrollOffset() + 12;
+    let current = null;
 
     for (let i = 0; i < items.length; i += 1) {
-      const itemTop = items[i].heading.offsetTop;
-
-      if (itemTop <= scrollPosition) {
+      const rect = items[i].heading.getBoundingClientRect();
+      if (rect.top <= offset) {
         current = items[i];
       } else {
         break;
       }
     }
 
-    return current;
+    if (!current) {
+      current = items[0];
+    }
+
+    setActive(current.heading.id);
   }
 
-  function activateLink() {
-    const current = getCurrentItem();
-    if (!current) return;
+  const observer = new IntersectionObserver(
+    function () {
+      updateActiveByViewport();
+    },
+    {
+      root: null,
+      rootMargin: "-80px 0px -70% 0px",
+      threshold: [0, 1]
+    }
+  );
 
-    const newId = current.heading.id;
-    if (newId === currentActiveId) return;
-
-    currentActiveId = newId;
-
-    items.forEach(function (item) {
-      item.link.classList.remove("toc-active");
-    });
-
-    current.link.classList.add("toc-active");
-  }
+  headings.forEach(function (heading) {
+    observer.observe(heading);
+  });
 
   let ticking = false;
 
   function onScroll() {
     if (!ticking) {
       window.requestAnimationFrame(function () {
-        activateLink();
+        updateActiveByViewport();
         ticking = false;
       });
       ticking = true;
@@ -241,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", activateLink);
+  window.addEventListener("resize", updateActiveByViewport);
 
-  activateLink();
+  updateActiveByViewport();
 });
