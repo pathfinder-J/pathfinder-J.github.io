@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const toggleBtn = document.createElement("button");
   toggleBtn.className = "post-toc-toggle";
   toggleBtn.type = "button";
-  toggleBtn.textContent = "Collapse";
 
   header.appendChild(title);
   header.appendChild(toggleBtn);
@@ -36,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let h2Counter = 0;
   let h3Counter = 0;
-
   const items = [];
 
   headings.forEach(function (heading, index) {
@@ -49,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (tag === "h2") {
       h2Counter += 1;
       h3Counter = 0;
-    } else if (tag === "h3") {
+    } else {
       h3Counter += 1;
     }
 
@@ -89,18 +87,27 @@ document.addEventListener("DOMContentLoaded", function () {
     li.appendChild(a);
     ul.appendChild(li);
 
-    items.push({
-      heading: heading,
-      link: a
-    });
+    items.push({ heading, link: a });
   });
 
   body.appendChild(ul);
   toc.appendChild(body);
 
-  toggleBtn.addEventListener("click", function () {
-    const collapsed = toc.classList.toggle("is-collapsed");
+  function setCollapsed(collapsed) {
+    toc.classList.toggle("is-collapsed", collapsed);
     toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
+  }
+
+  setCollapsed(window.innerWidth <= 960);
+
+  toggleBtn.addEventListener("click", function () {
+    setCollapsed(!toc.classList.contains("is-collapsed"));
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth <= 960 && !toc.dataset.userToggled) {
+      setCollapsed(true);
+    }
   });
 
   items.forEach(function (item) {
@@ -113,13 +120,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!target) return;
 
-      const y = target.getBoundingClientRect().top + window.scrollY - 80;
+      const offset = window.innerWidth <= 960 ? 72 : 80;
+      const y = target.getBoundingClientRect().top + window.scrollY - offset;
 
       window.scrollTo({
         top: y,
         behavior: "smooth"
       });
+
+      if (window.innerWidth <= 960) {
+        setCollapsed(true);
+      }
     });
+  });
+
+  toggleBtn.addEventListener("click", function () {
+    toc.dataset.userToggled = "true";
   });
 
   function activateLink() {
@@ -132,9 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    if (!current) {
-      current = items[0];
-    }
+    if (!current) current = items[0];
 
     items.forEach(function (item) {
       item.link.classList.remove("toc-active");
