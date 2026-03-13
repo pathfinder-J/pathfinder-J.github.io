@@ -104,40 +104,32 @@ document.addEventListener("DOMContentLoaded", function () {
       const isActive = link.getAttribute("href") === "#" + id;
       link.classList.toggle("active", isActive);
     });
-
-    const activeLink = toc.querySelector('a[href="#' + id + '"]');
-    if (activeLink) {
-      activeLink.scrollIntoView({
-        block: "nearest"
-      });
-    }
   }
 
-  function getAbsoluteTop(el) {
-    let top = 0;
-    let node = el;
-
-    while (node) {
-      top += node.offsetTop || 0;
-      node = node.offsetParent;
-    }
-
-    return top;
+  function getHeadingTops() {
+    return headings.map(function (heading) {
+      return {
+        id: heading.id,
+        top: heading.getBoundingClientRect().top + window.scrollY
+      };
+    });
   }
 
   function updateActiveHeading() {
-    const scrollMark = window.pageYOffset + 160;
-    let current = headings[0];
+    const tops = getHeadingTops();
+    const mark = window.scrollY + 180;
 
-    for (let i = headings.length - 1; i >= 0; i--) {
-      const headingTop = getAbsoluteTop(headings[i]);
-      if (headingTop <= scrollMark) {
-        current = headings[i];
+    let currentId = tops[0].id;
+
+    for (let i = 0; i < tops.length; i++) {
+      if (tops[i].top <= mark) {
+        currentId = tops[i].id;
+      } else {
         break;
       }
     }
 
-    setActive(current.id);
+    setActive(currentId);
   }
 
   window.addEventListener("scroll", updateActiveHeading, { passive: true });
@@ -145,5 +137,6 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("load", updateActiveHeading);
 
   setTimeout(updateActiveHeading, 0);
-  setTimeout(updateActiveHeading, 200);
+  setTimeout(updateActiveHeading, 300);
+  setTimeout(updateActiveHeading, 1000);
 });
