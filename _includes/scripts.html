@@ -1,3 +1,12 @@
 <script src="{{ '/assets/js/codeblock.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/toc.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
+<script>
+  window.GLOSSARY = {
+  {% for item in site.data.glossary %}
+  "{{ item[0] }}": "{{ item[1].url }}",
+  {% endfor %}
+  };
+</script>
+
+<script src="{{ '/assets/js/glossary.js' | relative_url }}"></script>
