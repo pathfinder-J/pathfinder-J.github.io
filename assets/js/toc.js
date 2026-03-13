@@ -1,28 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  var toc = document.getElementById("toc");
-  var content = document.querySelector(".post-content");
+  const toc = document.getElementById("toc");
+  const content = document.querySelector(".post-content");
 
   if (!toc || !content) return;
 
-  var headings = content.querySelectorAll("h2, h3");
-
+  const headings = content.querySelectorAll("h2, h3");
   if (!headings.length) {
     toc.style.display = "none";
     return;
   }
 
+  /* ===== TOC HEADER ===== */
 
-  /* ===== HEADER ===== */
-
-  var header = document.createElement("div");
+  const header = document.createElement("div");
   header.className = "post-toc-header";
 
-  var title = document.createElement("div");
+  const title = document.createElement("div");
   title.className = "post-toc-title";
   title.textContent = "Contents";
 
-  var toggleBtn = document.createElement("button");
+  const toggleBtn = document.createElement("button");
   toggleBtn.className = "post-toc-toggle";
   toggleBtn.type = "button";
   toggleBtn.textContent = "Collapse";
@@ -32,58 +30,131 @@ document.addEventListener("DOMContentLoaded", function () {
 
   toc.appendChild(header);
 
+  /* ===== TOC BODY ===== */
 
-  /* ===== BODY ===== */
-
-  var body = document.createElement("div");
+  const body = document.createElement("div");
   body.className = "post-toc-body";
 
-  var ul = document.createElement("ul");
+  const ul = document.createElement("ul");
   ul.className = "post-toc-list";
 
+  const links = [];
 
-  /* ===== BUILD LIST ===== */
-
-  headings.forEach(function (heading, index) {
+  headings.forEach((heading, index) => {
 
     if (!heading.id) {
       heading.id = "section-" + (index + 1);
     }
 
-    var li = document.createElement("li");
+    /* ===== anchor link (#) ===== */
 
-    if (heading.tagName.toLowerCase() === "h3") {
-      li.className = "toc-h3";
-    } else {
-      li.className = "toc-h2";
-    }
+    const anchor = document.createElement("a");
+    anchor.href = "#" + heading.id;
+    anchor.className = "heading-anchor";
+    anchor.textContent = "#";
 
-    var a = document.createElement("a");
+    heading.appendChild(anchor);
+
+    /* ===== TOC entry ===== */
+
+    const li = document.createElement("li");
+    li.className = heading.tagName.toLowerCase() === "h3" ? "toc-h3" : "toc-h2";
+
+    const a = document.createElement("a");
     a.href = "#" + heading.id;
-    a.textContent = heading.textContent;
+    a.textContent = heading.textContent.replace("#", "");
 
     li.appendChild(a);
     ul.appendChild(li);
 
-  });
+    links.push({
+      link: a,
+      heading: heading
+    });
 
+  });
 
   body.appendChild(ul);
   toc.appendChild(body);
 
-
-  /* ===== TOGGLE ===== */
+  /* ===== TOC COLLAPSE ===== */
 
   toggleBtn.addEventListener("click", function () {
 
-    var collapsed = toc.classList.toggle("is-collapsed");
+    const collapsed = toc.classList.toggle("is-collapsed");
 
-    if (collapsed) {
-      toggleBtn.textContent = "Expand";
-    } else {
-      toggleBtn.textContent = "Collapse";
-    }
+    toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
 
   });
+
+  /* ===== SMOOTH SCROLL ===== */
+
+  document.querySelectorAll('.post-toc a').forEach(anchor => {
+
+    anchor.addEventListener("click", function(e){
+
+      e.preventDefault();
+
+      const target = document.querySelector(this.getAttribute("href"));
+
+      if (!target) return;
+
+      window.scrollTo({
+        top: target.offsetTop - 80,
+        behavior: "smooth"
+      });
+
+    });
+
+  });
+
+  /* ===== SCROLL SPY ===== */
+
+  function activateLink() {
+
+    let current = null;
+
+    links.forEach(item => {
+
+      const rect = item.heading.getBoundingClientRect();
+
+      if (rect.top <= 120) {
+        current = item;
+      }
+
+    });
+
+    if (!current) return;
+
+    links.forEach(item => {
+      item.link.classList.remove("toc-active");
+    });
+
+    current.link.classList.add("toc-active");
+
+    /* ===== AUTO SCROLL TOC ===== */
+
+    const container = toc.querySelector(".post-toc-body");
+
+    if (container) {
+
+      const linkRect = current.link.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      if (
+        linkRect.top < containerRect.top ||
+        linkRect.bottom > containerRect.bottom
+      ) {
+        current.link.scrollIntoView({
+          block: "center",
+          behavior: "smooth"
+        });
+      }
+
+    }
+
+  }
+
+  window.addEventListener("scroll", activateLink);
 
 });
