@@ -1,94 +1,174 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const toc = document.getElementById("toc");
-  const content = document.getElementById("post-content");
+(function () {
+  "use strict";
 
-  if (!toc || !content) return;
+  function buildHeadingId(text, usedIds) {
+    var base = SiteUtils.slugify(text) || "section";
+    var id = base;
+    var index = 2;
 
-  const headings = Array.from(content.querySelectorAll("h1, h2, h3"));
-  if (headings.length === 0) {
-    toc.innerHTML = "";
-    return;
+    while (usedIds.has(id) || document.getElementById(id)) {
+      id = base + "-" + index;
+      index += 1;
+    }
+
+    usedIds.add(id);
+    return id;
   }
 
-  let h1Count = 0;
-  let h2Count = 0;
-  let h3Count = 0;
+  function initToc() {
+    var toc = document.getElementById("toc");
+    var content = document.getElementById("post-content");
 
-  const ul = document.createElement("ul");
-  const headingData = [];
+    if (!toc || !content) return;
 
-  headings.forEach(function (heading, index) {
-    if (!heading.id) {
-      heading.id = "heading-" + index;
+    var headings = Array.from(content.querySelectorAll("h1, h2, h3"));
+    if (!headings.length) {
+      toc.innerHTML = "";
+      return;
     }
 
-    const tag = heading.tagName.toLowerCase();
-    let number = "";
+    var usedIds = new Set();
+    var counts = { h1: 0, h2: 0, h3: 0 };
+    var headingData = [];
 
-    if (tag === "h1") {
-      h1Count += 1;
-      h2Count = 0;
-      h3Count = 0;
-      number = String(h1Count);
-    } else if (tag === "h2") {
-      h2Count += 1;
-      h3Count = 0;
-      number = h1Count > 0 ? h1Count + "." + h2Count : String(h2Count);
-    } else {
-      h3Count += 1;
-      if (h1Count > 0 && h2Count > 0) {
-        number = h1Count + "." + h2Count + "." + h3Count;
-      } else if (h2Count > 0) {
-        number = h2Count + "." + h3Count;
+    headings.forEach(function (heading) {
+      var title =
+        heading.getAttribute("data-original-text") || heading.textContent.trim();
+
+      if (!heading.id) {
+        heading.id = buildHeadingId(title, usedIds);
       } else {
-        number = String(h3Count);
+        usedIds.add(heading.id);
       }
-    }
 
-    const originalText =
-      heading.getAttribute("data-original-text") || heading.textContent.trim();
+      var tag = heading.tagName.toLowerCase();
+      var number = "";
 
-    heading.setAttribute("data-original-text", originalText);
+      if (tag === "h1") {
+        counts.h1 += 1;
+        counts.h2 = 0;
+        counts.h3 = 0;
+        number = String(counts.h1);
+      } else if (tag === "h2") {
+        counts.h2 += 1;
+        counts.h3 = 0;
+        number = counts.h1 > 0 ? counts.h1 + "." + counts.h2 : String(counts.h2);
+      } else {
+        counts.h3 += 1;
+        if (counts.h1 > 0 && counts.h2 > 0) {
+          number = counts.h1 + "." + counts.h2 + "." + counts.h3;
+        } else if (counts.h2 > 0) {
+          number = counts.h2 + "." + counts.h3;
+        } else {
+          number = String(counts.h3);
+        }
+      }
 
-    headingData.push({
-      heading: heading,
-      tag: tag,
-      number: number,
-      title: originalText
+      heading.setAttribute("data-original-text", title);
+
+      headingData.push({
+        heading: heading,
+        tag: tag,
+        title: title,
+        number: number
+      });
     });
-  });
 
-  headingData.forEach(function (item) {
-    const heading = item.heading;
-    const number = item.number;
-    const title = item.title;
+    headingData.forEach(function (item) {
+      var heading = item.heading;
 
-    if (!heading.querySelector(".heading-number")) {
-      heading.textContent = "";
+      if (!heading.querySelector(":scope > .heading-number")) {
+        while (heading.firstChild) {
+          heading.removeChild(heading.firstChild);
+        }
 
-      const numSpan = document.createElement("span");
-      numSpan.className = "heading-number";
-      numSpan.textContent = number;
+        var numSpan = document.createElement("span");
+        numSpan.className = "heading-number";
+        numSpan.textContent = item.number;
 
-      const textSpan = document.createElement("span");
-      textSpan.className = "heading-text";
-      textSpan.textContent = title;
+        var textSpan = document.createElement("span");
+        textSpan.className = "heading-text";
+        textSpan.textContent = item.title;
 
-      heading.appendChild(numSpan);
-      heading.appendChild(document.createTextNode(" "));
-      heading.appendChild(textSpan);
+        heading.appendChild(numSpan);
+        heading.appendChild(document.createTextNode(" "));
+        heading.appendChild(textSpan);
+      }
+    });
+
+    var ul = document.createElement("ul");
+
+    headingData.forEach(function (item) {
+      var li = document.createElement("li");
+      li.className = "toc-" + item.tag;
+
+      var a = document.createElement("a");
+      a.href = "#" + item.heading.id;
+      a.textContent = item.number + " " + item.title;
+
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    toc.innerHTML = "";
+    toc.appendChild(ul);
+
+    var links = Array.from(toc.querySelectorAll("a"));
+    var headingTops = [];
+
+    function computeHeadingTops() {
+      headingTops = headingData.map(function (item) {
+        return {
+          id: item.heading.id,
+          top: item.heading.getBoundingClientRect().top + window.scrollY
+        };
+      });
     }
 
-    const li = document.createElement("li");
-    li.className = "toc-" + item.tag;
+    function updateActiveHeading() {
+      if (!headingTops.length) return;
 
-    const a = document.createElement("a");
-    a.href = "#" + heading.id;
-    a.textContent = number + " " + title;
+      var mark = window.scrollY + 180;
+      var currentId = headingTops[0].id;
 
-    li.appendChild(a);
-    ul.appendChild(li);
-  });
+      for (var i = 0; i < headingTops.length; i++) {
+        if (headingTops[i].top <= mark) {
+          currentId = headingTops[i].id;
+        } else {
+          break;
+        }
+      }
+
+      links.forEach(function (link) {
+        link.classList.toggle("active", link.getAttribute("href") === "#" + currentId);
+      });
+    }
+
+    computeHeadingTops();
+    updateActiveHeading();
+
+    window.addEventListener("scroll", SiteUtils.debounce(updateActiveHeading, 20), {
+      passive: true
+    });
+    window.addEventListener(
+      "resize",
+      SiteUtils.debounce(function () {
+        computeHeadingTops();
+        updateActiveHeading();
+      }, 120)
+    );
+    window.addEventListener(
+      "load",
+      function () {
+        computeHeadingTops();
+        updateActiveHeading();
+      },
+      { once: true }
+    );
+  }
+
+  SiteUtils.ready(initToc);
+})();  });
 
   toc.innerHTML = "";
   toc.appendChild(ul);
