@@ -30,3 +30,12 @@
   display: block;
   margin: 18px auto;
 }
+
+.glossary-link{
+  text-decoration: underline dotted;
+  color: #0b57d0;
+}
+
+.glossary-link:hover{
+  background: #eef4ff;
+}
