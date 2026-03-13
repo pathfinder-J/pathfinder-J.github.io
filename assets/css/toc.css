@@ -55,10 +55,8 @@
 }
 
 .post-toc-body{
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scroll-behavior: auto;
+  max-height: none;
+  overflow: visible;
 }
 
 
@@ -140,7 +138,7 @@
 
   .post-toc-body{
     max-height: none;
-    overflow-y: visible;
+    overflow: visible;
   }
 
   .post-toc-title{
