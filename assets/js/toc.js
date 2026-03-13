@@ -98,7 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function setActive(id) {
     if (!id || activeId === id) return;
-
     activeId = id;
 
     links.forEach(function (link) {
@@ -114,16 +113,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function getAbsoluteTop(el) {
+    let top = 0;
+    let node = el;
+
+    while (node) {
+      top += node.offsetTop || 0;
+      node = node.offsetParent;
+    }
+
+    return top;
+  }
+
   function updateActiveHeading() {
-    const offset = 180;
+    const scrollMark = window.pageYOffset + 160;
     let current = headings[0];
 
-    for (let i = 0; i < headings.length; i++) {
-      const rect = headings[i].getBoundingClientRect();
-
-      if (rect.top <= offset) {
+    for (let i = headings.length - 1; i >= 0; i--) {
+      const headingTop = getAbsoluteTop(headings[i]);
+      if (headingTop <= scrollMark) {
         current = headings[i];
-      } else {
         break;
       }
     }
@@ -133,6 +142,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.addEventListener("scroll", updateActiveHeading, { passive: true });
   window.addEventListener("resize", updateActiveHeading);
+  window.addEventListener("load", updateActiveHeading);
 
-  updateActiveHeading();
+  setTimeout(updateActiveHeading, 0);
+  setTimeout(updateActiveHeading, 200);
 });
