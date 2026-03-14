@@ -55,6 +55,19 @@ $$
 
 식 \eqref{eq:infonce}도 정상적으로 보이면 된다.
 
+$$
+\begin{aligned}
+\mathcal{L}_{\mathrm{NCE}}
+&=
+-\mathbb{E}
+\left[
+\log
+\frac{\exp(s(x,y))}
+{\sum_{y' \in \mathcal{Y}} \exp(s(x,y'))}
+\right]
+\end{aligned}
+$$
+
 ## 짧은 코드 블록 테스트
 
 아래는 짧은 코드 블록이다.  
