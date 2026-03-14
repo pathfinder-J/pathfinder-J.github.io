@@ -59,16 +59,18 @@ mjx-container[display="true"] {
   max-width: 100%;
 }
 
-/* 스크롤 수식 */
-mjx-container.math-scroll {
+/* aligned 같은 multiline math */
+mjx-container.math-wrap {
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-/* 줄바꿈 수식 */
-mjx-container.math-wrap {
-  overflow-x: visible;
+/* 긴 equation */
+mjx-container.math-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* equation number */
