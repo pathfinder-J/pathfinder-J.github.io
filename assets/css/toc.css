@@ -134,3 +134,34 @@ html {
     max-height: none;
   }
 }
+
+.toc-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.toc-title{
+  font-weight: 700;
+}
+
+.toc-toggle-btn{
+  border: 1px solid #d0d7de;
+  background: #fff;
+  color: #222;
+  border-radius: 8px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.toc-toggle-btn:hover{
+  background: #f6f8fa;
+}
+
+#toc.is-collapsed .toc-list{
+  display: none;
+}
