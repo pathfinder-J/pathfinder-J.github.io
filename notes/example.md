@@ -31,14 +31,14 @@ date: "2026-03-13"
 
 다음은 mutual information의 정의이다.
 
-\begin{equation}
+$$
 I(X;Y)
 =
 \mathbb{E}\left[
 \log \frac{p(x,y)}{p(x)p(y)}
 \right]
 \label{eq:mi}
-\end{equation}
+$$
 
 식 \eqref{eq:mi}가 제대로 번호와 함께 참조되는지 확인해보자.
 
