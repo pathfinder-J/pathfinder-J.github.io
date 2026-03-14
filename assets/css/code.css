@@ -47,8 +47,8 @@
 
 .code-viewport{
   position: relative;
-  width: max-content;
-  min-width: 0;
+  width: 100%;
+  min-width: 100%;
 }
 
 .highlighter-rouge pre,
