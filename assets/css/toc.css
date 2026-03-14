@@ -136,30 +136,29 @@ html {
 }
 
 .toc-header{
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.6rem;
   margin-bottom: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .toc-title{
   font-weight: 700;
 }
 
-.toc-toggle-btn{
-  border: 1px solid #d0d7de;
-  background: #fff;
-  color: #222;
-  border-radius: 8px;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.9rem;
-  line-height: 1.2;
-  cursor: pointer;
-}
-
-.toc-toggle-btn:hover{
-  background: #f6f8fa;
+.toc-chevron{
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  flex: 0 0 1rem;
 }
 
 #toc.is-collapsed .toc-list{
