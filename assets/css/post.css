@@ -77,6 +77,32 @@ mjx-container[jax="CHTML"][display="true"] {
   max-width: 100%;
 }
 
+/* ===== extra fix for eqref / inline math baseline ===== */
+
+/* 본문 줄높이를 먼저 안정화 */
+.post-content p,
+.post-content li {
+  line-height: 1.72;
+}
+
+/* inline math 전체를 조금 더 위로 */
+.post-content mjx-container[jax="CHTML"][display="false"] {
+  transform: translateY(-0.08em);
+  transform-origin: center;
+}
+
+/* eqref처럼 링크 안에 들어간 inline math는 더 강하게 보정 */
+.post-content a mjx-container[jax="CHTML"][display="false"] {
+  display: inline-block !important;
+  transform: translateY(-0.16em) scale(0.92);
+  transform-origin: center;
+}
+
+/* eqref 바깥 링크 박스도 줄 정렬에 맞춤 */
+.post-content a {
+  line-height: inherit;
+}
+
 /* ===== block quotes ===== */
 
 .post-content blockquote {
