@@ -1,46 +1,56 @@
-(function () {
-  "use strict";
+document.addEventListener("DOMContentLoaded", function () {
+  var glossary = window.GLOSSARY || {};
+  var content = document.querySelector(".post-content");
+
+  if (!content) return;
+
+  var terms = Object.keys(glossary).filter(Boolean);
+  if (!terms.length) return;
+
+  terms.sort(function (a, b) {
+    return b.length - a.length;
+  });
+
+  function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  var pattern = terms.map(escapeRegExp).join("|");
+  var regex = new RegExp("\\b(" + pattern + ")\\b", "gi");
 
   function shouldSkipNode(node) {
     if (!node || !node.parentElement) return true;
 
-    var parent = node.parentElement;
-
     return Boolean(
-      parent.closest(
+      node.parentElement.closest(
         "a, pre, code, script, style, textarea, .code-toolbar, .MathJax, mjx-container"
       )
     );
   }
 
-  function buildGlossaryRegex(glossary) {
-    var terms = Object.keys(glossary || {}).filter(Boolean);
+  function findUrl(matchedText) {
+    if (glossary[matchedText]) return glossary[matchedText];
 
-    if (!terms.length) return null;
+    var lower = matchedText.toLowerCase();
+    for (var i = 0; i < terms.length; i++) {
+      if (terms[i].toLowerCase() === lower) {
+        return glossary[terms[i]];
+      }
+    }
 
-    terms.sort(function (a, b) {
-      return b.length - a.length;
-    });
-
-    var pattern = terms
-      .map(function (term) {
-        return SiteUtils.escapeRegExp(term);
-      })
-      .join("|");
-
-    return new RegExp("\\b(" + pattern + ")\\b", "gi");
+    return null;
   }
 
-  function replaceTextNode(node, glossary, regex) {
-    if (!node.nodeValue || !node.nodeValue.trim()) return;
+  function replaceTextNode(node) {
+    var text = node.nodeValue;
+    if (!text || !text.trim()) return;
     if (shouldSkipNode(node)) return;
-    if (!regex.test(node.nodeValue)) {
+    if (!regex.test(text)) {
       regex.lastIndex = 0;
       return;
     }
     regex.lastIndex = 0;
 
-    var text = node.nodeValue;
     var frag = document.createDocumentFragment();
     var lastIndex = 0;
     var match;
@@ -53,14 +63,7 @@
         frag.appendChild(document.createTextNode(text.slice(lastIndex, start)));
       }
 
-      var url = glossary[matchedText] || glossary[matchedText.toLowerCase()] || glossary[matchedText.toUpperCase()];
-      if (!url) {
-        var exactKey = Object.keys(glossary).find(function (key) {
-          return key.toLowerCase() === matchedText.toLowerCase();
-        });
-        url = exactKey ? glossary[exactKey] : null;
-      }
-
+      var url = findUrl(matchedText);
       if (url) {
         var link = document.createElement("a");
         link.className = "glossary-link";
@@ -81,29 +84,12 @@
     node.parentNode.replaceChild(frag, node);
   }
 
-  function walkTextNodes(root, glossary, regex) {
-    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    var textNodes = [];
+  var walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null);
+  var textNodes = [];
 
-    while (walker.nextNode()) {
-      textNodes.push(walker.currentNode);
-    }
-
-    textNodes.forEach(function (node) {
-      replaceTextNode(node, glossary, regex);
-    });
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
   }
 
-  function initGlossary() {
-    var glossary = window.GLOSSARY || {};
-    var content = document.querySelector(".post-content");
-    if (!content) return;
-
-    var regex = buildGlossaryRegex(glossary);
-    if (!regex) return;
-
-    walkTextNodes(content, glossary, regex);
-  }
-
-  SiteUtils.ready(initGlossary);
-})();
+  textNodes.forEach(replaceTextNode);
+});
