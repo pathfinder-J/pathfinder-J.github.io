@@ -78,6 +78,12 @@ mjx-mo {
   vertical-align: 0.05em;
 }
 
+.post-content p {
+  text-align: justify;
+  hyphens: auto;
+  text-wrap: pretty;
+}
+
 /* ===== block quotes ===== */
 
 .post-content blockquote {
