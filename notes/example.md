@@ -46,14 +46,11 @@ I(X;Y)
 
 $$
 \mathcal{L}_{\mathrm{NCE}}
-=
--\mathbb{E}
-\left[
-\log
-\frac{\exp(s(x,y))}
-{\sum_{y' \in \mathcal{Y}}
-\exp(s(x,y'))}
+= -\mathbb{E}\left[
+\log \frac{\exp(s(x,y))}
+{\sum_{y' \in \mathcal{Y}} \exp(s(x,y'))}
 \right]
+\tag{1}\label{eq:infonce}
 $$
 
 식 \eqref{eq:infonce}도 정상적으로 보이면 된다.
