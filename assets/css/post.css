@@ -78,10 +78,9 @@ mjx-mo {
   vertical-align: 0.05em;
 }
 
-.post-content p {
+.post-content[lang="en"] p {
   text-align: justify;
   hyphens: auto;
-  text-wrap: pretty;
 }
 
 /* ===== block quotes ===== */
