@@ -68,6 +68,19 @@ $$
 \end{aligned}
 $$
 
+$$
+\mathcal{L}_{\mathrm{NCE}} =
+-\mathbb{E}_{(x,y) \sim p(x,y)}
+\left[
+\log
+\frac{\exp(s(x,y))}
+{\sum_{y_1 \in \mathcal{Y}} \exp(s(x,y_1))
++\sum_{y_2 \in \mathcal{Y}} \exp(s(x,y_2))
++\sum_{y_3 \in \mathcal{Y}} \exp(s(x,y_3))
++\sum_{y_4 \in \mathcal{Y}} \exp(s(x,y_4))}
+\right]
+$$
+
 다음은 theorem 스타일이 제대로 적용되는지 확인하기 위한 테스트다.
 
 ---
