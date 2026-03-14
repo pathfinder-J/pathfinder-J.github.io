@@ -40,67 +40,41 @@
   background: #eef4ff;
 }
 
-/* ===== MathJax alignment ===== */
+/* ===== MathJax minimal reset ===== */
 
-/* inline math */
+/* inline math: MathJax 기본 정렬을 최대한 존중 */
 mjx-container[jax="CHTML"][display="false"] {
-  display: inline !important;
-  font-size: 0.9em;
-  line-height: inherit;
-  vertical-align: baseline !important;
-  position: relative;
-  top: -0.10em;
+  display: inline-block !important;
+  font-size: 1em !important;
+  line-height: 0 !important;
+  vertical-align: 0 !important;
+  position: static !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0 0.03em;
 }
 
-/* 내부 박스 baseline 강제 */
+/* 내부 수식 박스 */
 mjx-container[jax="CHTML"][display="false"] mjx-math {
+  line-height: 0 !important;
   vertical-align: baseline !important;
 }
 
-/* eqref 링크 */
-mjx-container[jax="CHTML"][display="false"] a {
-  text-decoration: none;
-  vertical-align: baseline !important;
+/* eqref 링크도 별도 이동/축소 금지 */
+.post-content a mjx-container[jax="CHTML"][display="false"] {
+  display: inline-block !important;
+  position: static !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0;
 }
 
-/* 문장 안 간격 */
-.post-content p mjx-container[jax="CHTML"][display="false"],
-.post-content li mjx-container[jax="CHTML"][display="false"] {
-  margin: 0 0.02em;
-}
-
-/* display math */
+/* display math만 레이아웃 안전장치 유지 */
 mjx-container[jax="CHTML"][display="true"] {
   margin: 1.2rem 0;
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
-}
-
-/* ===== extra fix for eqref / inline math baseline ===== */
-
-/* 본문 줄높이를 먼저 안정화 */
-.post-content p,
-.post-content li {
-  line-height: 1.72;
-}
-
-/* inline math 전체를 조금 더 위로 */
-.post-content mjx-container[jax="CHTML"][display="false"] {
-  transform: translateY(-0.08em);
-  transform-origin: center;
-}
-
-/* eqref처럼 링크 안에 들어간 inline math는 더 강하게 보정 */
-.post-content a mjx-container[jax="CHTML"][display="false"] {
-  display: inline-block !important;
-  transform: translateY(-0.16em) scale(0.92);
-  transform-origin: center;
-}
-
-/* eqref 바깥 링크 박스도 줄 정렬에 맞춤 */
-.post-content a {
-  line-height: inherit;
 }
 
 /* ===== block quotes ===== */
