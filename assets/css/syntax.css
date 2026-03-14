@@ -7,11 +7,3 @@
 .highlight .nb { color: #005cc5; }
 .highlight .n  { color: #24292e; }
 
-mjx-container[jax="CHTML"][display="false"] {
-  font-size: 0.9em;
-  vertical-align: 0.06em;
-}
-
-mjx-container[jax="CHTML"][display="true"] {
-  margin: 1.4em 0;
-}
