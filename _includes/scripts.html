@@ -9,3 +9,19 @@
   };
 </script>
 <script src="{{ '/assets/js/glossary.js?v=' | append: site.github.build_revision | relative_url }}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.querySelectorAll('mjx-container[display="true"]').forEach(function (el) {
+
+    if (el.querySelector("mjx-mtable")) {
+      el.classList.add("math-wrap");
+    } else {
+      el.classList.add("math-scroll");
+    }
+
+  });
+
+});
+</script>
