@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var headings = Array.from(content.querySelectorAll("h1, h2, h3"));
   if (!headings.length) {
-    toc.innerHTML = "";
     return;
   }
 
@@ -96,15 +95,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  var existingTitle =
+  var existingHeader =
+    toc.querySelector(".toc-header") ||
     toc.querySelector(".toc-title") ||
     toc.querySelector("h2, h3, .toc-heading, .toc-label");
 
-  var titleText = existingTitle
-    ? existingTitle.textContent.trim() || "Contents"
+  var titleText = existingHeader
+    ? existingHeader.textContent.trim() || "Contents"
     : "Contents";
 
-  toc.innerHTML = "";
+  if (existingHeader) {
+    existingHeader.remove();
+  }
+
+  var oldList = toc.querySelector(".toc-list");
+  if (oldList) {
+    oldList.remove();
+  }
 
   var header = document.createElement("button");
   header.className = "toc-header";
@@ -122,7 +129,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   header.appendChild(chevron);
   header.appendChild(title);
-  toc.appendChild(header);
+
+  toc.prepend(header);
 
   var ul = document.createElement("ul");
   ul.className = "toc-list";
@@ -149,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
     chevron.textContent = collapsed ? "▸" : "▾";
   };
 
-  var links = Array.from(toc.querySelectorAll("a"));
+  var links = Array.from(toc.querySelectorAll(".toc-list a"));
   var headingTops = [];
 
   function computeHeadingTops() {
