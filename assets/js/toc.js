@@ -101,17 +101,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var header = document.createElement("div");
   header.className = "toc-header";
 
-  var title = document.createElement("span");
-  title.className = "toc-title";
-  title.textContent = "Contents";
-
   var toggleBtn = document.createElement("button");
   toggleBtn.className = "toc-toggle-btn";
   toggleBtn.type = "button";
   toggleBtn.setAttribute("aria-expanded", "true");
   toggleBtn.textContent = "Collapse";
 
-  header.appendChild(title);
   header.appendChild(toggleBtn);
   toc.appendChild(header);
 
