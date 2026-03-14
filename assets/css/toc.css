@@ -36,15 +36,13 @@ html {
   box-sizing: border-box;
 }
 
-.post-toc::before {
-  content: "Contents";
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e5e7eb;
+/* 기존 CSS 가상 제목 제거 */
+.post-toc::before,
+.post-toc:before,
+#toc::before,
+#toc:before {
+  content: none !important;
+  display: none !important;
 }
 
 .post-toc ul {
@@ -118,6 +116,46 @@ html {
   font-weight: 600;
 }
 
+/* JS가 만드는 TOC 헤더 */
+.toc-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 12px 0;
+  padding: 0 0 10px 0;
+  border: 0;
+  border-bottom: 1px solid #e5e7eb;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.toc-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.toc-chevron {
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  flex: 0 0 1rem;
+  color: #222;
+}
+
+.toc-list {
+  margin: 0;
+  padding: 0;
+}
+
+#toc.is-collapsed .toc-list {
+  display: none;
+}
+
 @media (max-width: 1100px) {
   .page-shell {
     display: block;
@@ -133,34 +171,4 @@ html {
   .post-toc {
     max-height: none;
   }
-}
-
-.toc-header{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.75rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.toc-title{
-  font-weight: 700;
-}
-
-.toc-chevron{
-  display: inline-block;
-  width: 1rem;
-  text-align: center;
-  flex: 0 0 1rem;
-}
-
-#toc.is-collapsed .toc-list{
-  display: none;
 }
