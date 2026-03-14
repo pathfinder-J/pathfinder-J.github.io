@@ -81,6 +81,16 @@ $$
 \right]
 $$
 
+$$
+\begin{aligned}
+p(x_1,\dots,x_n)
+&=
+\prod_{i=1}^{n} p(x_i \mid x_1,\dots,x_{i-1}) \\
+&=
+p(x_1)p(x_2|x_1)p(x_3|x_1,x_2)\cdots p(x_n|x_1,\dots,x_{n-1})
+\end{aligned}
+$$
+
 다음은 theorem 스타일이 제대로 적용되는지 확인하기 위한 테스트다.
 
 ---
