@@ -56,11 +56,19 @@ mjx-container[display="false"] mjx-mo {
 }
 
 mjx-container[display="true"] {
-  margin: 1.15rem 0;
+  max-width: 100%;
+}
+
+/* 스크롤 수식 */
+mjx-container.math-scroll {
   overflow-x: auto;
   overflow-y: hidden;
-  max-width: 100%;
   -webkit-overflow-scrolling: touch;
+}
+
+/* 줄바꿈 수식 */
+mjx-container.math-wrap {
+  overflow-x: visible;
 }
 
 /* equation number */
