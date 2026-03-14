@@ -39,3 +39,29 @@
 .glossary-link:hover{
   background: #eef4ff;
 }
+
+/* ===== MathJax alignment ===== */
+
+mjx-container[jax="CHTML"][display="false"] {
+  display: inline-block;
+  font-size: 0.92em;
+  vertical-align: 0.06em;
+  line-height: 1;
+}
+
+mjx-container[jax="CHTML"][display="false"] a {
+  font-size: 1em;
+  text-decoration: none;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+  margin: 1.2rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+.post-content p mjx-container[jax="CHTML"][display="false"],
+.post-content li mjx-container[jax="CHTML"][display="false"] {
+  margin: 0 0.02em;
+}
