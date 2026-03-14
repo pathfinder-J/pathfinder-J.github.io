@@ -68,6 +68,73 @@ $$
 \end{aligned}
 $$
 
+다음은 theorem 스타일이 제대로 적용되는지 확인하기 위한 테스트다.
+
+---
+
+> **Definition 1.**
+> Let \(X\) be a random variable on a probability space \((\Omega, \mathcal{F}, P)\).
+> The expectation of \(X\) is defined as
+>
+> $$
+> \mathbb{E}[X]
+> =
+> \int_{\Omega} X(\omega)\, dP(\omega).
+> $$
+
+---
+
+> **Theorem 1.**
+> Let \(X\) and \(Y\) be independent random variables.
+> Then
+>
+> $$
+> \mathbb{E}[XY]
+> =
+> \mathbb{E}[X]\mathbb{E}[Y].
+> $$
+
+---
+
+> **Lemma 1.**
+> Let \(X\) be a random variable.
+> If \(X \ge 0\), then
+>
+> $$
+> \mathbb{E}[X] \ge 0.
+> $$
+
+---
+
+> **Remark.**
+> Independence is essential in Theorem 1.
+> Without independence the identity
+>
+> \[
+> \mathbb{E}[XY] = \mathbb{E}[X]\mathbb{E}[Y]
+> \]
+>
+> does not necessarily hold.
+
+---
+
+> **Example.**
+> Let \(X \sim \mathcal{N}(0,1)\).
+> Then
+>
+> $$
+> \mathbb{E}[X] = 0
+> \quad
+> \text{and}
+> \quad
+> \mathbb{E}[X^2] = 1.
+> $$
+
+---
+
+위 정리들을 보면 CSS로 스타일링된 theorem 블록이 나타나야 한다.
+
+
 ## 짧은 코드 블록 테스트
 
 아래는 짧은 코드 블록이다.  
