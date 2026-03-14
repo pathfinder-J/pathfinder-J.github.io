@@ -65,3 +65,20 @@ mjx-container[jax="CHTML"][display="true"] {
 .post-content li mjx-container[jax="CHTML"][display="false"] {
   margin: 0 0.02em;
 }
+
+.post-content blockquote {
+  margin: 1.4rem 0;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid #111;
+  border-radius: 12px;
+  background: #fafafa;
+  color: #222;
+}
+
+.post-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.post-content blockquote strong:first-child {
+  font-weight: 700;
+}
