@@ -42,22 +42,34 @@
 
 /* ===== MathJax alignment ===== */
 
+/* inline math */
 mjx-container[jax="CHTML"][display="false"] {
-  display: inline-block;
+  display: inline !important;
   font-size: 0.9em;
-  line-height: 1;
-  vertical-align: 0.18em;
+  line-height: inherit;
+  vertical-align: baseline !important;
+  position: relative;
+  top: -0.10em;
 }
 
+/* 내부 박스 baseline 강제 */
 mjx-container[jax="CHTML"][display="false"] mjx-math {
   vertical-align: baseline !important;
 }
 
+/* eqref 링크 */
 mjx-container[jax="CHTML"][display="false"] a {
-  font-size: 1em;
   text-decoration: none;
+  vertical-align: baseline !important;
 }
 
+/* 문장 안 간격 */
+.post-content p mjx-container[jax="CHTML"][display="false"],
+.post-content li mjx-container[jax="CHTML"][display="false"] {
+  margin: 0 0.02em;
+}
+
+/* display math */
 mjx-container[jax="CHTML"][display="true"] {
   margin: 1.2rem 0;
   overflow-x: auto;
@@ -65,10 +77,7 @@ mjx-container[jax="CHTML"][display="true"] {
   max-width: 100%;
 }
 
-.post-content p mjx-container[jax="CHTML"][display="false"],
-.post-content li mjx-container[jax="CHTML"][display="false"] {
-  margin: 0 0.02em;
-}
+/* ===== block quotes ===== */
 
 .post-content blockquote {
   margin: 1.4rem 0;
