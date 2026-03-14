@@ -46,7 +46,11 @@ mjx-container[jax="CHTML"][display="false"] {
   display: inline-block;
   font-size: 0.9em;
   line-height: 1;
-  vertical-align: 0.14em;
+  vertical-align: 0.18em;
+}
+
+mjx-container[jax="CHTML"][display="false"] mjx-math {
+  vertical-align: baseline !important;
 }
 
 mjx-container[jax="CHTML"][display="false"] a {
