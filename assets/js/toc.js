@@ -96,18 +96,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  var existingTitle =
+    toc.querySelector(".toc-title") ||
+    toc.querySelector("h2, h3, .toc-heading, .toc-label");
+
+  var titleText = existingTitle
+    ? existingTitle.textContent.trim() || "Contents"
+    : "Contents";
+
   toc.innerHTML = "";
 
-  var header = document.createElement("div");
+  var header = document.createElement("button");
   header.className = "toc-header";
+  header.type = "button";
+  header.setAttribute("aria-expanded", "true");
+  header.setAttribute("aria-label", "Toggle table of contents");
 
-  var toggleBtn = document.createElement("button");
-  toggleBtn.className = "toc-toggle-btn";
-  toggleBtn.type = "button";
-  toggleBtn.setAttribute("aria-expanded", "true");
-  toggleBtn.textContent = "Collapse";
+  var chevron = document.createElement("span");
+  chevron.className = "toc-chevron";
+  chevron.textContent = "▾";
 
-  header.appendChild(toggleBtn);
+  var title = document.createElement("span");
+  title.className = "toc-title";
+  title.textContent = titleText;
+
+  header.appendChild(chevron);
+  header.appendChild(title);
   toc.appendChild(header);
 
   var ul = document.createElement("ul");
@@ -129,10 +143,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   toc.appendChild(ul);
 
-  toggleBtn.onclick = function () {
+  header.onclick = function () {
     var collapsed = toc.classList.toggle("is-collapsed");
-    toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
-    toggleBtn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    header.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    chevron.textContent = collapsed ? "▸" : "▾";
   };
 
   var links = Array.from(toc.querySelectorAll("a"));
