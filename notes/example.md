@@ -37,7 +37,7 @@ I(X;Y)
 \mathbb{E}\left[
 \log \frac{p(x,y)}{p(x)p(y)}
 \right]
-\label{eq:mi}
+\tag{1}\label{eq:mi}
 $$
 
 식 \eqref{eq:mi}가 제대로 번호와 함께 참조되는지 확인해보자.
@@ -50,7 +50,7 @@ $$
 \log \frac{\exp(s(x,y))}
 {\sum_{y' \in \mathcal{Y}} \exp(s(x,y'))}
 \right]
-\tag{1}\label{eq:infonce}
+\tag{2}\label{eq:infonce}
 $$
 
 식 \eqref{eq:infonce}도 정상적으로 보이면 된다.
