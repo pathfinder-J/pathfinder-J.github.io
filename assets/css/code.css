@@ -200,3 +200,15 @@
     font-size: 11px;
   }
 }
+
+.page-shell,
+.page-content-column,
+.container,
+.post,
+.post-content{
+  min-width: 0;
+}
+
+
+
+
