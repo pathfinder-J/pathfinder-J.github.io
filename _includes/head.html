@@ -23,16 +23,22 @@ href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700
 
 <!-- MathJax -->
 <script>
-window.MathJax = {
-  tex: {
-    tags: "ams",
-    packages: { "[+]": ["ams"] }
-  },
-  options: {
-    skipHtmlTags: ["script","noscript","style","textarea","pre","code"]
-  }
-};
+  window.MathJax = {
+    tex: {
+      tags: "ams",
+      packages: { "[+]": ["ams"] },
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+    },
+    chtml: {
+      scale: 1,
+      matchFontHeight: false
+    }
+  };
 </script>
-
-<script defer
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
