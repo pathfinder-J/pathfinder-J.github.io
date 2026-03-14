@@ -44,16 +44,17 @@ I(X;Y)
 
 다음은 InfoNCE 형태를 흉내낸 식이다.
 
-\begin{equation}
+$$
 \mathcal{L}_{\mathrm{NCE}}
 =
--\mathbb{E}\left[
+-\mathbb{E}
+\left[
 \log
 \frac{\exp(s(x,y))}
-{\sum_{y' \in \mathcal{Y}} \exp(s(x,y'))}
+{\sum_{y' \in \mathcal{Y}}
+\exp(s(x,y'))}
 \right]
-\label{eq:infonce}
-\end{equation}
+$$
 
 식 \eqref{eq:infonce}도 정상적으로 보이면 된다.
 
