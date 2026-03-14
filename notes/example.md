@@ -29,7 +29,7 @@ date: "2026-03-13"
 
 ## 수식 번호와 참조 테스트
 
-다음은 mutual information의 정의이다. 확률 변수 $X$의 기댓값은 \( \mathbb{E}[X] \)로 표기한다.
+다음은 mutual information의 정의이다. 확률 변수 \( X \)의 기댓값은 \( \mathbb{E}[X] \)로 표기한다.
 
 $$
 I(X;Y)
@@ -74,7 +74,7 @@ $$
 
 > **Definition 1.**
 > Let \(X\) be a random variable on a probability space \((\Omega, \mathcal{F}, P)\).
-> The expectation of $X$ is defined as
+> The expectation of \(X\) is defined as
 >
 > $$
 > \mathbb{E}[X]
