@@ -4,6 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!toc || !content) return;
 
+  var path = window.location.pathname;
+  var isLandingPage =
+    path === "/" ||
+    path === "/index.html" ||
+    path === "/index" ||
+    path === "/notes/" ||
+    path === "/notes/index.html";
+
   var headings = Array.from(content.querySelectorAll("h1, h2, h3"));
   if (!headings.length) {
     toc.innerHTML = "";
@@ -13,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var h1Count = 0;
   var h2Count = 0;
   var h3Count = 0;
-  var ul = document.createElement("ul");
   var headingData = [];
 
   headings.forEach(function (heading, index) {
@@ -24,23 +31,25 @@ document.addEventListener("DOMContentLoaded", function () {
     var tag = heading.tagName.toLowerCase();
     var number = "";
 
-    if (tag === "h1") {
-      h1Count += 1;
-      h2Count = 0;
-      h3Count = 0;
-      number = String(h1Count);
-    } else if (tag === "h2") {
-      h2Count += 1;
-      h3Count = 0;
-      number = h1Count > 0 ? h1Count + "." + h2Count : String(h2Count);
-    } else {
-      h3Count += 1;
-      if (h1Count > 0 && h2Count > 0) {
-        number = h1Count + "." + h2Count + "." + h3Count;
-      } else if (h2Count > 0) {
-        number = h2Count + "." + h3Count;
+    if (!isLandingPage) {
+      if (tag === "h1") {
+        h1Count += 1;
+        h2Count = 0;
+        h3Count = 0;
+        number = String(h1Count);
+      } else if (tag === "h2") {
+        h2Count += 1;
+        h3Count = 0;
+        number = h1Count > 0 ? h1Count + "." + h2Count : String(h2Count);
       } else {
-        number = String(h3Count);
+        h3Count += 1;
+        if (h1Count > 0 && h2Count > 0) {
+          number = h1Count + "." + h2Count + "." + h3Count;
+        } else if (h2Count > 0) {
+          number = h2Count + "." + h3Count;
+        } else {
+          number = String(h3Count);
+        }
       }
     }
 
@@ -60,6 +69,14 @@ document.addEventListener("DOMContentLoaded", function () {
   headingData.forEach(function (item) {
     var heading = item.heading;
 
+    if (isLandingPage) {
+      if (!heading.dataset.tocPlain) {
+        heading.textContent = item.title;
+        heading.dataset.tocPlain = "true";
+      }
+      return;
+    }
+
     if (!heading.dataset.tocNumbered) {
       heading.textContent = "";
 
@@ -77,20 +94,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
       heading.dataset.tocNumbered = "true";
     }
+  });
 
+  toc.innerHTML = "";
+
+  var header = document.createElement("div");
+  header.className = "toc-header";
+
+  var title = document.createElement("span");
+  title.className = "toc-title";
+  title.textContent = "Contents";
+
+  var toggleBtn = document.createElement("button");
+  toggleBtn.className = "toc-toggle-btn";
+  toggleBtn.type = "button";
+  toggleBtn.setAttribute("aria-expanded", "true");
+  toggleBtn.textContent = "Collapse";
+
+  header.appendChild(title);
+  header.appendChild(toggleBtn);
+  toc.appendChild(header);
+
+  var ul = document.createElement("ul");
+  ul.className = "toc-list";
+
+  headingData.forEach(function (item) {
     var li = document.createElement("li");
     li.className = "toc-" + item.tag;
 
     var a = document.createElement("a");
-    a.href = "#" + heading.id;
-    a.textContent = item.number + " " + item.title;
+    a.href = "#" + item.heading.id;
+    a.textContent = isLandingPage
+      ? item.title
+      : item.number + " " + item.title;
 
     li.appendChild(a);
     ul.appendChild(li);
   });
 
-  toc.innerHTML = "";
   toc.appendChild(ul);
+
+  toggleBtn.onclick = function () {
+    var collapsed = toc.classList.toggle("is-collapsed");
+    toggleBtn.textContent = collapsed ? "Expand" : "Collapse";
+    toggleBtn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  };
 
   var links = Array.from(toc.querySelectorAll("a"));
   var headingTops = [];
@@ -132,10 +180,14 @@ document.addEventListener("DOMContentLoaded", function () {
   computeHeadingTops();
   updateActiveHeading();
 
-  window.addEventListener("scroll", function () {
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(updateActiveHeading, 20);
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    function () {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(updateActiveHeading, 20);
+    },
+    { passive: true }
+  );
 
   window.addEventListener("resize", function () {
     clearTimeout(resizeTimer);
@@ -145,8 +197,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 120);
   });
 
-  window.addEventListener("load", function () {
-    computeHeadingTops();
-    updateActiveHeading();
-  }, { once: true });
+  window.addEventListener(
+    "load",
+    function () {
+      computeHeadingTops();
+      updateActiveHeading();
+    },
+    { once: true }
+  );
 });
