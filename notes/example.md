@@ -74,7 +74,7 @@ $$
 
 > **Definition 1.**
 > Let \(X\) be a random variable on a probability space \((\Omega, \mathcal{F}, P)\).
-> The expectation of \(X\) is defined as
+> The expectation of $X$ is defined as
 >
 > $$
 > \mathbb{E}[X]
